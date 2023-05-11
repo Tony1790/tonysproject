@@ -55,6 +55,7 @@
 <body>
 	<h2>회원 목록</h2>
 	<a class="newJoin" href="user-insert.do"><h3>회원 가입</h3></a>
+	<a href="board-list.do">게시글 목록</a>
 		<table>
 			<tr>
 				<td colspan="3">전체 회원 수 : ${pagination.count}</td>

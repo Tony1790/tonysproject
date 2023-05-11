@@ -28,4 +28,16 @@ public class BoardService {
 	public ArrayList<Board> getBoards() {
 		return dao.getBoards();
 	}
+	
+	public Board getBoard(Board board) {
+		return dao.getBoard(board);
+	}
+	
+	public void editBoard(Board board) {
+		dao.editBoard(board);
+	}
+	
+	public void deleteBoard(Board board) {
+		dao.deleteBoard(board);
+	}
 }

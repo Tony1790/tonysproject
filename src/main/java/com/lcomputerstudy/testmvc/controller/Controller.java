@@ -123,6 +123,23 @@ public class Controller extends HttpServlet {
 				view = "user/detail";
 				request.setAttribute("user", user);
 				break;
+			case "/board-detail.do":
+				board = new Board();
+				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
+				boardService = BoardService.getInstance();
+				board = boardService.getBoard(board);
+				view = "board/board-detail";
+				request.setAttribute("board", board);
+				break;
+			case "/board-edit.do":
+				board = new Board();
+				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
+				boardService = BoardService.getInstance();
+				board = boardService.getBoard(board);
+				view = "board/board-edit";
+				request.setAttribute("board", board);
+				break;
+			
 			case "/user-edit.do":
 				user = new User();
 				user.setU_idx(Integer.parseInt(request.getParameter("u_idx")));
@@ -130,6 +147,16 @@ public class Controller extends HttpServlet {
 				user = userService.getUser(user);
 				view = "user/edit";
 				request.setAttribute("user", user);
+				break;
+			case "/board-edit-process.do":
+				board = new Board();
+				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
+				board.setB_title(request.getParameter("edit_title"));
+				board.setB_content(request.getParameter("edit_content"));
+				
+				boardService = BoardService.getInstance();
+				boardService.editBoard(board);
+				view = "/board/board-edit-result";
 				break;
 			case "/user-edit-process.do":
 				user = new User();
@@ -151,6 +178,13 @@ public class Controller extends HttpServlet {
 				userService = UserService.getInstance();
 				userService.deleteUser(user);
 				view = "user/delete";
+				break;
+			case "/board-delete.do":
+				board = new Board();
+				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
+				boardService = BoardService.getInstance();
+				boardService.deleteBoard(board);
+				view = "board/board-delete";
 				break;
 			case "/user-login.do":
 				view = "user/login";

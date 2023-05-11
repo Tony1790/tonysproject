@@ -30,6 +30,8 @@
 </Style>
 <body>
 	<h2>게시글 목록</h2>
+	<a href = "/tonysproject/user-list.do">유저 목록 가기</a>
+	<a href="/tonysproject/board-create.do">게시글 작성하기</a>
 	<table>
 		<tr>
 			<!-- 여기에 전체 게시글 숫자 들어가야함 -->
@@ -45,11 +47,11 @@
 		<!-- css로 디스플레이 flex로 바꾸고 할튼 정렬해야함 -->
 		<c:forEach items="${boardList}" var="item" varStatus="status">
 			<tr>
-				<td>${item.b_idx}</td>
+				<td><a href="/tonysproject/board-detail.do?b_idx=${item.b_idx}">${item.b_idx}</a></td>
 				<td>${item.b_title}</td>
 				<td>${item.b_content}</td>
 				<td>${item.b_date}</td>
-				
+				<td>${item.b_view}</td>
 			</tr>
 		</c:forEach>
 	</table>
