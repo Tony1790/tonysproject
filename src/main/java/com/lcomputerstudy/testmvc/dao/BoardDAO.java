@@ -49,6 +49,8 @@ public class BoardDAO {
 			pstmt.setInt(9, board.getB_depth()+1);
 			pstmt.executeUpdate();
 			pstmt.close();
+			
+			query = "update board set b_order = b_order + 1 where b_order < b_order";
 		}catch ( Exception e) {
 			e.printStackTrace();
 		}
