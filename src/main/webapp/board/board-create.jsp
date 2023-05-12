@@ -9,7 +9,10 @@
 <title>게시글 작성</title>
 </head>
 <style>
-	
+	.content {
+		width : 600px;
+		height : 400px;
+	}
 </style>
 <body>
 	<h2>게시글 작성</h2>
@@ -17,7 +20,7 @@
 		<input type="hidden" name="u_idx" value="${user.u_idx}">
 		
 		<p class="title"> 제목 : <input type="text" name="title" maxlength="20"></p>
-		<p class="content"> 내용 : <input type="text" name="content"></p>
+		<textarea class="content" name="content" placeholder="내용 : "></textarea>
 		
 		<p><input type="submit" value="작성"/></p>
 	</form>

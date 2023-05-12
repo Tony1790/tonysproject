@@ -8,25 +8,65 @@
 <title>게시글 목록</title>
 </head>
 <Style>
-	body {
-		padding: 10px 50px;
-	}
-	table {
-		border-collapse: collapse;
-		margin : 40px auto;
-	}
-	table tr th{
-		font-weight:700;
-	}
-	table tr td, table tr th {
-		border:1px solid #818181;
-		width:200px;
-		text-align:center;
-	}
-	h2 {
-		text-align: center;
-	}
-	
+/* 전체 body에 적용될 스타일 */
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f0f0f0;
+	margin: 0;
+}
+
+/* h2 태그에 적용될 스타일 */
+h2 {
+	text-align: center;
+	color: #333;
+	margin-top: 40px;
+}
+
+/* 테이블에 적용될 스타일 */
+table {
+	border-collapse: collapse;
+	margin: 40px auto;
+	background-color: #fff;
+	border: 1px solid #ccc;
+}
+
+/* 테이블 제목 셀에 적용될 스타일 */
+table th {
+	font-weight: bold;
+	text-align: center;
+	border: 1px solid #ccc;
+	background-color: #f0f0f0;
+}
+
+/* 테이블 내용 셀에 적용될 스타일 */
+table td {
+	border: 1px solid #ccc;
+	text-align: center;
+	padding: 10px;
+}
+
+/* 링크에 적용될 스타일 */
+a {
+	color: #333;
+	text-decoration: none;
+	padding: 5px;
+	border: 1px solid #ccc;
+	margin: 10px;
+	display: inline-block;
+}
+
+/* 마우스를 올리면 링크에 적용될 스타일 */
+a:hover {
+	background-color: #f0f0f0;
+}
+
+/* 전체 게시글 수 셀에 적용될 스타일 */
+.total_count_board {
+	text-align: center;
+	font-size: 16px;
+	font-weight: bold;
+	color: #333;
+}
 </Style>
 <body>
 	<h2>게시글 목록</h2>

@@ -107,10 +107,7 @@ public class BoardDAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		Timestamp tst = new Timestamp(System.currentTimeMillis());
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String currentTimeString = sdf.format(tst);
-		System.out.println(currentTimeString);
+		
 		
 		try {
 			conn = DBConnection.getConnection();
