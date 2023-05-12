@@ -40,4 +40,8 @@ public class BoardService {
 	public void deleteBoard(Board board) {
 		dao.deleteBoard(board);
 	}
+	
+	public void createReboard(Board board) {
+		dao.createReboard(board);
+	}
 }

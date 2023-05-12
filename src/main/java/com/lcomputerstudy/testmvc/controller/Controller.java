@@ -186,6 +186,24 @@ public class Controller extends HttpServlet {
 				boardService.deleteBoard(board);
 				view = "board/board-delete";
 				break;
+			case "/reboard-create.do":
+				view = "board/reboard-create";
+				break;
+			case "/reboard-create-process.do":
+				board = new Board();
+				session = request.getSession();
+				user = (User)session.getAttribute("user");
+				board.setU_idx(user.getU_idx());
+				board.setB_title(request.getParameter("title"));
+				board.setB_content(request.getParameter("content"));
+				board.setB_group(Integer.parseInt(request.getParameter("b_group")));
+				board.setB_order(Integer.parseInt(request.getParameter("b_order")));
+				board.setB_depth(Integer.parseInt(request.getParameter("b_depth")));
+				board.setB_date(currentDateTime);
+				boardService = BoardService.getInstance();
+				
+				boardService.createReboard(board);
+				
 			case "/user-login.do":
 				view = "user/login";
 				break;

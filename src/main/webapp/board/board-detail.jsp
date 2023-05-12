@@ -66,7 +66,7 @@ a.delete-btn {
   background-color: #d9534f;
 }
 
-a.edit-btn:hover, a.delete-btn:hover {
+a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
   opacity: 0.8;
 }
 
@@ -131,6 +131,10 @@ a.edit-btn:hover, a.delete-btn:hover {
 			</td>
 			<td style="border:none;">
 				<a class="delete-btn" href="/tonysproject/board-delete.do?b_idx=${board.b_idx}" style="width:70%;font-weight:700;background-color:red;color:#fff;" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
+			</td>
+			<td style="border:none;">
+				<a class="re_content_btn" href="/tonysproject/reboard-create.do?b_idx=${board.b_idx}?b_group=${board.b_group}?b_depth=${board.b_depth}?b_order=${board.b_order}" style="width:70%;font-weight:700;background-color:#333;color:#fff;">답글</a>
+				
 			</td>
 		</tr>
 	</table>

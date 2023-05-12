@@ -28,6 +28,32 @@ public class BoardDAO {
 		return dao;
 	}
 	
+	public void createReboard(Board board) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = DBConnection.getConnection();
+			
+			String query = "insert into (b_title, b_content, b_writer, b_date, u_idx, b_view, b_group, b_order, b_depth) "
+					+ "values (?,?,(select u_id from user where u_idx=?),?,?,?,?,?,?)";
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, board.getB_title());
+			pstmt.setString(2, board.getB_content());
+			pstmt.setInt(3, board.getU_idx());
+			pstmt.setTimestamp(4, board.getB_date());
+			pstmt.setInt(5, board.getU_idx());
+			pstmt.setInt(6, 0);
+			pstmt.setInt(7, board.getB_group());
+			pstmt.setInt(8, board.getB_order()+1);
+			pstmt.setInt(9, board.getB_depth()+1);
+			pstmt.executeUpdate();
+			pstmt.close();
+		}catch ( Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void createBoard(Board board) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -36,7 +62,7 @@ public class BoardDAO {
 		try {
 			conn = DBConnection.getConnection();
 			
-			String query2 = "insert into board (b_title, b_content, b_writer, b_date, u_idx, b_view) values (?,?,(select u_id from user where u_idx=?),?,?,?)";
+			String query2 = "insert into board (b_title, b_content, b_writer, b_date, u_idx, b_view, b_group, b_order, b_depth) values (?,?,(select u_id from user where u_idx=?),?,?,?,0,1,0)";
 			pstmt = conn.prepareStatement(query2);
 			pstmt.setString(1, board.getB_title());
 			pstmt.setString(2, board.getB_content());
@@ -45,6 +71,12 @@ public class BoardDAO {
 			pstmt.setInt(5, board.getU_idx());
 			pstmt.setInt(6, 0);
 			pstmt.executeUpdate();
+			pstmt.close();
+			
+			query2 = "update board set b_group = last_insert_id() where b_idx = last_insert_id()";
+			pstmt = conn.prepareStatement(query2);
+			pstmt.executeUpdate();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -124,6 +156,9 @@ public class BoardDAO {
 				board.setB_writer(rs.getString("b_writer"));
 				board.setB_date(rs.getTimestamp("b_date"));
 				board.setB_view(rs.getInt("b_view") + 1); //조회수 1씩 증가
+				board.setB_group(rs.getInt("b_group"));
+				board.setB_order(rs.getInt("b_order"));
+				board.setB_depth(rs.getInt("b_depth"));
 				
 				//조회수 증가 DB에 업데이트
 				String updateQuery = "update board set b_view = ? where b_idx=?";
@@ -200,6 +235,8 @@ public class BoardDAO {
 			}
 		}
 	}
+	
+	
 }
 
 
