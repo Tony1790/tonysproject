@@ -50,7 +50,9 @@ public class BoardDAO {
 			pstmt.executeUpdate();
 			pstmt.close();
 			
-			query = "update board set b_order = b_order + 1 where b_order < b_order";
+			query = "update board "
+					+ "set b_order = b_order + 1 "
+					+ "where b_order > (select b_order from board b_idx = last_insert_id())";
 		}catch ( Exception e) {
 			e.printStackTrace();
 		}

@@ -3,7 +3,9 @@ package com.lcomputerstudy.testmvc.controller;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -123,14 +125,7 @@ public class Controller extends HttpServlet {
 				view = "user/detail";
 				request.setAttribute("user", user);
 				break;
-			case "/board-detail.do":
-				board = new Board();
-				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
-				boardService = BoardService.getInstance();
-				board = boardService.getBoard(board);
-				view = "board/board-detail";
-				request.setAttribute("board", board);
-				break;
+			
 			case "/board-edit.do":
 				board = new Board();
 				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
@@ -185,6 +180,14 @@ public class Controller extends HttpServlet {
 				boardService = BoardService.getInstance();
 				boardService.deleteBoard(board);
 				view = "board/board-delete";
+				break;
+			case "/board-detail.do":
+				board = new Board();
+				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
+				boardService = BoardService.getInstance();
+				board = boardService.getBoard(board);
+				view = "board/board-detail";
+				request.setAttribute("board", board);
 				break;
 			case "/reboard-create.do":
 				view = "board/reboard-create";
@@ -246,14 +249,14 @@ public class Controller extends HttpServlet {
 		
 		String[] authList = {
 				"/user-list.do",
-				"/user-insert.do",
-				"/user-insert-process.do",
 				"/user-detail.do",
 				"/user-edit.do",
 				"/user-edit-process.do",
 				"/user-logout.do",
 				"/board-create.do",
-				"/board-create-process.do"
+				"/board-create-process.do",
+				"/reboard-create.do",
+				"/reboard-create-process.do"
 		};
 		
 		for (String item : authList) {
