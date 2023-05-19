@@ -4,14 +4,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>로그인 필요</title>
+<title>답글 작성 완료</title>
 </head>
 <body>
-<h1>로그인이 필요합니다.</h1>
+	<h1>작성 완료</h1>
+	<a href="/tonysproject/board-list.do">돌아가기</a>
 </body>
-<script>
-	setTimeout(function () {
-		window.location.href = "user-login.do";
-	}, 1000);
-</script>
 </html>

@@ -57,13 +57,6 @@ public class Controller extends HttpServlet {
 		Board board = null;
 		
 		switch (command) {
-		
-			case "/board-list.do":
-				boardService = BoardService.getInstance();
-				ArrayList<Board> boardList = boardService.getBoards(); 
-				view = "board/board-list";
-				request.setAttribute("boardList", boardList);
-				break;
 			case "/user-list.do":
 				String reqPage = request.getParameter("page");
 				if(reqPage != null) {
@@ -71,12 +64,10 @@ public class Controller extends HttpServlet {
 				}
 				userService = UserService.getInstance();
 				count = userService.getUsersCount();
-				
 				pagination = new Pagination();
 				pagination.setPage(page);
 				pagination.setCount(count);
 				pagination.init();
-				
 				ArrayList<User> list = userService.getUsers(pagination);
 				view = "user/list";
 				request.setAttribute("list", list);
@@ -84,6 +75,94 @@ public class Controller extends HttpServlet {
 				break;
 			case "/user-insert.do":
 				view = "user/insert";
+				break;
+			case "/user-insert-process.do":
+				user = new User();
+				user.setU_id(request.getParameter("id"));
+				user.setU_pw(request.getParameter("password"));
+				user.setU_name(request.getParameter("name"));
+				user.setU_tel(request.getParameter("tel1") + "-" + request.getParameter("tel2") + "-" + request.getParameter("tel3"));
+				user.setU_age(request.getParameter("age"));
+				userService = UserService.getInstance();
+				userService.insertUser(user);
+				view = "user/insert-result";
+				break;
+			case "/user-detail.do":
+				user = new User();
+				user.setU_idx(Integer.parseInt(request.getParameter("u_idx")));
+				userService = UserService.getInstance();
+				user = userService.getUser(user);
+				view = "user/detail";
+				request.setAttribute("user", user);
+				break;
+			case "/user-edit.do":
+				user = new User();
+				user.setU_idx(Integer.parseInt(request.getParameter("u_idx")));
+				userService = UserService.getInstance();
+				user = userService.getUser(user);
+				view = "user/edit";
+				request.setAttribute("user", user);
+				break;
+			case "/user-edit-process.do":
+				user = new User();
+				user.setU_idx(Integer.parseInt(request.getParameter("u_idx")));
+				user.setU_id(request.getParameter("edit_id"));
+				user.setU_pw(request.getParameter("edit_password"));
+				user.setU_name(request.getParameter("edit_name"));
+				user.setU_tel(request.getParameter("edit_tel1") + "-" + request.getParameter("edit_tel2") + "-" + request.getParameter("edit_tel3"));
+				user.setU_age(request.getParameter("edit_age"));
+				userService = UserService.getInstance();
+				userService.editUser(user);
+				view = "user/edit-result";
+				break;
+			case "/user-delete.do":
+				user = new User();
+				user.setU_idx(Integer.parseInt(request.getParameter("u_idx")));
+				userService = UserService.getInstance();
+				userService.deleteUser(user);
+				view = "user/delete";
+				break;
+			
+			
+			
+			case "/board-list.do":
+				boardService = BoardService.getInstance();
+				ArrayList<Board> boardList = boardService.getBoards(); 
+				view = "board/board-list";
+				request.setAttribute("boardList", boardList);
+				break;
+			case "/board-detail.do":
+				board = new Board();
+				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
+				boardService = BoardService.getInstance();
+				board = boardService.getBoard(board);
+				view = "board/board-detail";
+				request.setAttribute("board", board);
+				break;
+			case "/board-delete.do":
+				board = new Board();
+				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
+				boardService = BoardService.getInstance();
+				boardService.deleteBoard(board);
+				view = "board/board-delete";
+				break;
+			case "/board-edit.do":
+				board = new Board();
+				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
+				boardService = BoardService.getInstance();
+				board = boardService.getBoard(board);
+				view = "board/board-edit";
+				request.setAttribute("board", board);
+				break;
+			case "/board-edit-process.do":
+				board = new Board();
+				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
+				board.setB_title(request.getParameter("edit_title"));
+				board.setB_content(request.getParameter("edit_content"));
+				
+				boardService = BoardService.getInstance();
+				boardService.editBoard(board);
+				view = "/board/board-edit-result";
 				break;
 			case "/board-create.do":
 				view = "board/board-create";
@@ -98,99 +177,23 @@ public class Controller extends HttpServlet {
 				board.setB_title(request.getParameter("title"));
 				board.setB_content(request.getParameter("content"));
 				board.setB_date(currentDateTime);
-				//조회수?
 				boardService = BoardService.getInstance();
 				boardService.createBoard(board);
 				
 				view = "board/board-create-result";
 				break;
-			case "/user-insert-process.do":
-				user = new User();
-				user.setU_id(request.getParameter("id"));
-				user.setU_pw(request.getParameter("password"));
-				user.setU_name(request.getParameter("name"));
-				user.setU_tel(request.getParameter("tel1") + "-" + request.getParameter("tel2") + "-" + request.getParameter("tel3"));
-				user.setU_age(request.getParameter("age"));
-			
-				userService = UserService.getInstance();
-				userService.insertUser(user);
 				
-				view = "user/insert-result";
-				break;
-			case "/user-detail.do":
-				user = new User();
-				user.setU_idx(Integer.parseInt(request.getParameter("u_idx")));
-				userService = UserService.getInstance();
-				user = userService.getUser(user);
-				view = "user/detail";
-				request.setAttribute("user", user);
-				break;
-			
-			case "/board-edit.do":
-				board = new Board();
-				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
-				boardService = BoardService.getInstance();
-				board = boardService.getBoard(board);
-				view = "board/board-edit";
-				request.setAttribute("board", board);
-				break;
-			
-			case "/user-edit.do":
-				user = new User();
-				user.setU_idx(Integer.parseInt(request.getParameter("u_idx")));
-				userService = UserService.getInstance();
-				user = userService.getUser(user);
-				view = "user/edit";
-				request.setAttribute("user", user);
-				break;
-			case "/board-edit-process.do":
-				board = new Board();
-				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
-				board.setB_title(request.getParameter("edit_title"));
-				board.setB_content(request.getParameter("edit_content"));
 				
-				boardService = BoardService.getInstance();
-				boardService.editBoard(board);
-				view = "/board/board-edit-result";
-				break;
-			case "/user-edit-process.do":
-				user = new User();
-				user.setU_idx(Integer.parseInt(request.getParameter("u_idx")));
-				user.setU_id(request.getParameter("edit_id"));
-				user.setU_pw(request.getParameter("edit_password"));
-				user.setU_name(request.getParameter("edit_name"));
-				user.setU_tel(request.getParameter("edit_tel1") + "-" + request.getParameter("edit_tel2") + "-" + request.getParameter("edit_tel3"));
-				user.setU_age(request.getParameter("edit_age"));
-			
-				userService = UserService.getInstance();
-				userService.editUser(user);
 				
-				view = "user/edit-result";
-				break;
-			case "/user-delete.do":
-				user = new User();
-				user.setU_idx(Integer.parseInt(request.getParameter("u_idx")));
-				userService = UserService.getInstance();
-				userService.deleteUser(user);
-				view = "user/delete";
-				break;
-			case "/board-delete.do":
-				board = new Board();
-				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
-				boardService = BoardService.getInstance();
-				boardService.deleteBoard(board);
-				view = "board/board-delete";
-				break;
-			case "/board-detail.do":
-				board = new Board();
-				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
-				boardService = BoardService.getInstance();
-				board = boardService.getBoard(board);
-				view = "board/board-detail";
-				request.setAttribute("board", board);
-				break;
+			
+			
 			case "/reboard-create.do":
+				board = new Board();
+				board.setB_group(Integer.parseInt(request.getParameter("b_group")));
+				board.setB_order(Integer.parseInt(request.getParameter("b_order")));
+				board.setB_depth(Integer.parseInt(request.getParameter("b_depth")));
 				view = "board/reboard-create";
+				request.setAttribute("board", board);
 				break;
 			case "/reboard-create-process.do":
 				board = new Board();
@@ -204,8 +207,11 @@ public class Controller extends HttpServlet {
 				board.setB_depth(Integer.parseInt(request.getParameter("b_depth")));
 				board.setB_date(currentDateTime);
 				boardService = BoardService.getInstance();
-				
 				boardService.createReboard(board);
+				view = "board/reboard-create-result";
+				
+				
+				
 				
 			case "/user-login.do":
 				view = "user/login";

@@ -31,28 +31,33 @@ public class BoardDAO {
 	public void createReboard(Board board) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
+		board.setB_order(board.getB_order()+1);
+		board.setB_depth(board.getB_depth()+1);
+		
 		
 		try {
 			conn = DBConnection.getConnection();
 			
-			String query = "insert into (b_title, b_content, b_writer, b_date, u_idx, b_view, b_group, b_order, b_depth) "
+			String query = "insert into board (b_title, b_content, b_writer, b_date, u_idx, b_view, b_group, b_order, b_depth) "
 					+ "values (?,?,(select u_id from user where u_idx=?),?,?,?,?,?,?)";
 			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, board.getB_title());
+			pstmt.setString(1, " └" + board.getB_title());
 			pstmt.setString(2, board.getB_content());
 			pstmt.setInt(3, board.getU_idx());
 			pstmt.setTimestamp(4, board.getB_date());
 			pstmt.setInt(5, board.getU_idx());
 			pstmt.setInt(6, 0);
 			pstmt.setInt(7, board.getB_group());
-			pstmt.setInt(8, board.getB_order()+1);
-			pstmt.setInt(9, board.getB_depth()+1);
+			pstmt.setInt(8, board.getB_order());
+			pstmt.setInt(9, board.getB_depth());
 			pstmt.executeUpdate();
 			pstmt.close();
 			
 			query = "update board "
 					+ "set b_order = b_order + 1 "
-					+ "where b_order > (select b_order from board b_idx = last_insert_id())";
+					+ "where b_order >= " + board.getB_order() + " and b_idx != last_insert_id() and b_group = " + board.getB_group();
+			pstmt = conn.prepareStatement(query);
+			pstmt.executeUpdate();
 		}catch ( Exception e) {
 			e.printStackTrace();
 		}
@@ -109,6 +114,7 @@ public class BoardDAO {
 			String query = new StringBuilder()
 					.append("select board.*\n")
 					.append("from board\n")
+					.append("order by b_group desc, b_order asc")
 					.toString();
 			pstmt = conn.prepareStatement(query);
 			rs = pstmt.executeQuery();

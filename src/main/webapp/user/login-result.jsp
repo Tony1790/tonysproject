@@ -48,6 +48,7 @@
 	<div>
 		<ul>
 			<li><a href="user-list.do">회원 목록</a></li>
+			<li><a href="board-list.do">게시글 목록</a></li>			
 			<li><a href="logout.do">로그아웃</a></li>
 		</ul>
 	</div>
