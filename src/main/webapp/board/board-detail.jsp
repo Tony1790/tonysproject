@@ -140,6 +140,8 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 	</table>
 	
 	<table>
+		<tr>
+		</tr>
 	</table>
 </body>
 </html>
