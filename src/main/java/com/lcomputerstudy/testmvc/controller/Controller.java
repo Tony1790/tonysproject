@@ -18,9 +18,11 @@ import java.sql.Timestamp;
 
 import com.lcomputerstudy.testmvc.service.BoardService;
 import com.lcomputerstudy.testmvc.service.UserService;
+import com.lcomputerstudy.testmvc.service.CommentService;
 import com.lcomputerstudy.testmvc.vo.Board;
 import com.lcomputerstudy.testmvc.vo.Pagination;
 import com.lcomputerstudy.testmvc.vo.User;
+import com.lcomputerstudy.testmvc.vo.Comment;
 
 @WebServlet("*.do")
 public class Controller extends HttpServlet {
@@ -55,6 +57,8 @@ public class Controller extends HttpServlet {
 		User user = null;
 		BoardService boardService = null;
 		Board board = null;
+		CommentService commentService = null;
+		Comment comment = null;
 		
 		switch (command) {
 			case "/user-list.do":
@@ -136,8 +140,15 @@ public class Controller extends HttpServlet {
 				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
 				boardService = BoardService.getInstance();
 				board = boardService.getBoard(board);
+				
+				comment = new Comment();
+				int bIdx = Integer.parseInt(request.getParameter("b_idx"));
+				commentService = CommentService.getInstance();
+				ArrayList<Comment> commentList = commentService.getComments(bIdx);
+				
 				view = "board/board-detail";
 				request.setAttribute("board", board);
+				request.setAttribute("commentList", commentList);
 				break;
 			case "/board-delete.do":
 				board = new Board();
@@ -213,6 +224,18 @@ public class Controller extends HttpServlet {
 				
 				
 				
+			case "/comment-create-process.do":
+				comment = new Comment();
+				session = request.getSession();
+				user = (User)session.getAttribute("user");
+				comment.setC_writer(user.getU_id());
+				comment.setC_content(request.getParameter("origin-cmt-text"));
+				comment.setC_date(currentDateTime);
+				comment.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
+				commentService = CommentService.getInstance();
+				commentService.createComment(comment);
+				view = "/board/board-detail";
+				
 			case "/user-login.do":
 				view = "user/login";
 				break;
@@ -262,7 +285,8 @@ public class Controller extends HttpServlet {
 				"/board-create.do",
 				"/board-create-process.do",
 				"/reboard-create.do",
-				"/reboard-create-process.do"
+				"/reboard-create-process.do",
+				"/comment-create-process.do"
 		};
 		
 		for (String item : authList) {

@@ -104,6 +104,11 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 .btn-container {
   text-align: right;
 }
+
+.cmt-container {
+	max-width : 1200px;
+	margin : 0 auto;
+}
 </style>
 <body>
 	<h1>게시글 상세페이지</h1>
@@ -138,10 +143,39 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 			</td>
 		</tr>
 	</table>
-	
-	<table>
-		<tr>
-		</tr>
-	</table>
+		
+	<div class="cmt-container">
+		<div class="cmt-box1">
+			<div class="cmt-count">
+				<span>댓글 수 : N개</span>
+			</div>
+			<div class="cmt-list">
+				<ul>
+					<c:forEach items="${commentList}" var="cmt" varStatus="status">
+						<li>
+							<div>
+								<span>${cmt.c_writer}</span>
+							</div>
+							<div>
+								<span>${cmt.c_content}</span>
+							</div>
+							<div>
+								<span>${cmt.c_date}</span>
+							</div>
+						</li>
+					</c:forEach>
+				</ul>
+			</div>
+		</div>
+		<form action="/tonysproject/comment-create-process.do" method="POST">
+			<div class="cmt-editor">
+				<textarea rows="5" cols="25" name="origin-cmt-text" placeholder="댓글을 입력하세요" wrap="soft" required></textarea>
+				<input type="hidden" name="b_idx" value="${board.b_idx}" ></input>
+				<button type="submit" class="origin-cmt-submit-btn">
+					작성
+				</button>
+		</div>
+		</form>
+	</div>
 </body>
 </html>
