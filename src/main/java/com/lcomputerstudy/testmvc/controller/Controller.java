@@ -141,7 +141,6 @@ public class Controller extends HttpServlet {
 				boardService = BoardService.getInstance();
 				board = boardService.getBoard(board);
 				
-				comment = new Comment();
 				int bIdx = Integer.parseInt(request.getParameter("b_idx"));
 				commentService = CommentService.getInstance();
 				ArrayList<Comment> commentList = commentService.getComments(bIdx);
@@ -226,6 +225,8 @@ public class Controller extends HttpServlet {
 				
 			case "/comment-create-process.do":
 				comment = new Comment();
+				board = new Board();
+				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
 				session = request.getSession();
 				user = (User)session.getAttribute("user");
 				comment.setC_writer(user.getU_id());
@@ -234,7 +235,13 @@ public class Controller extends HttpServlet {
 				comment.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
 				commentService = CommentService.getInstance();
 				commentService.createComment(comment);
-				view = "/board/board-detail";
+				//request.setAttribute("board", board);
+				//response.sendRedirect(request.getContextPath() + "/board-detail.do");
+				//redirect 하는 법?
+				view = "board/board-list";
+				break;
+				
+				
 				
 			case "/user-login.do":
 				view = "user/login";

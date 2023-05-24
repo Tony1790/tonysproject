@@ -70,18 +70,21 @@ public class CommentDAO {
 			String query = new StringBuilder()
 					.append("select comment.*\n")
 					.append("from comment\n")
+					.append("where b_idx = ?")
 					.toString();
 			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, bIdx);
 			rs = pstmt.executeQuery();
 			commentList = new ArrayList<Comment>();
 			
 			while(rs.next()) {
 				Comment comment = new Comment();
 				comment.setC_idx(rs.getInt("c_idx"));
-				comment.setB_idx(bIdx);
+				comment.setB_idx(rs.getInt("b_idx"));
 				comment.setC_content(rs.getString("c_content"));
 				comment.setC_writer(rs.getString("c_writer"));
 				comment.setC_date(rs.getTimestamp("c_date"));
+				commentList.add(comment);
 			}
 			
 		} catch(Exception e) {
