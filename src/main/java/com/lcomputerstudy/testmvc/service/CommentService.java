@@ -28,4 +28,8 @@ public class CommentService {
 	public ArrayList<Comment> getComments(int bIdx) {
 		return dao.getComments(bIdx);
 	}
+	
+	public void createRecomment(Comment comment) {
+		dao.createRecomment(comment);
+	}
 }

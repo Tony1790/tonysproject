@@ -238,7 +238,26 @@ public class Controller extends HttpServlet {
 				//request.setAttribute("board", board);
 				//response.sendRedirect(request.getContextPath() + "/board-detail.do");
 				//redirect 하는 법?
-				view = "board/board-list";
+				view = "board/board-detail";
+				break;
+				
+				
+			case "/recomment-create-process.do":
+				comment = new Comment();
+				board = new Board();
+				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
+				session = request.getSession();
+				user = (User)session.getAttribute("user");
+				comment.setC_writer(user.getU_id());
+				comment.setC_content(request.getParameter("recmt-text"));
+				comment.setC_date(currentDateTime);
+				comment.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
+				comment.setC_group(Integer.parseInt(request.getParameter("c_group")));
+				comment.setC_order(Integer.parseInt(request.getParameter("c_order")));
+				comment.setC_depth(Integer.parseInt(request.getParameter("c_depth")));
+				commentService = CommentService.getInstance();
+				commentService.createRecomment(comment);
+				view = "board/board-detail";
 				break;
 				
 				
@@ -293,7 +312,8 @@ public class Controller extends HttpServlet {
 				"/board-create-process.do",
 				"/reboard-create.do",
 				"/reboard-create-process.do",
-				"/comment-create-process.do"
+				"/comment-create-process.do",
+				"/recomment-create-process.do"
 		};
 		
 		for (String item : authList) {

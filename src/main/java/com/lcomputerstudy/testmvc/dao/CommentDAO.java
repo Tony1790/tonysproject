@@ -36,12 +36,17 @@ public class CommentDAO {
 		try {
 			conn = DBConnection.getConnection();
 			
-			String query = "insert into comment (c_content, c_writer, c_date, b_idx) values (?, ?, ?, ?)";
+			String query = "insert into comment (c_content, c_writer, c_date, b_idx, c_group, c_order, c_depth) values (?, ?, ?, ?, 0, 1, 0)";
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, comment.getC_content());
 			pstmt.setString(2, comment.getC_writer());
 			pstmt.setTimestamp(3, comment.getC_date());
 			pstmt.setInt(4, comment.getB_idx());
+			pstmt.executeUpdate();
+			pstmt.close();
+			
+			query = "update comment set c_group = last_insert_id() where c_idx = last_insert_id()";
+			pstmt = conn.prepareStatement(query);
 			pstmt.executeUpdate();
 			
 		} catch (Exception e) {
@@ -70,7 +75,8 @@ public class CommentDAO {
 			String query = new StringBuilder()
 					.append("select comment.*\n")
 					.append("from comment\n")
-					.append("where b_idx = ?")
+					.append("where b_idx = ?\n")
+					.append("order by c_group desc, c_order asc")
 					.toString();
 			pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, bIdx);
@@ -84,6 +90,9 @@ public class CommentDAO {
 				comment.setC_content(rs.getString("c_content"));
 				comment.setC_writer(rs.getString("c_writer"));
 				comment.setC_date(rs.getTimestamp("c_date"));
+				comment.setC_group(rs.getInt("c_group"));
+				comment.setC_order(rs.getInt("c_order"));
+				comment.setC_depth(rs.getInt("c_depth"));
 				commentList.add(comment);
 			}
 			
@@ -100,7 +109,51 @@ public class CommentDAO {
 		}
 		return commentList;
 	}
-
+	
+	
+	public void createRecomment(Comment comment) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		comment.setC_order(comment.getC_order() + 1);
+		comment.setC_depth(comment.getC_depth() + 1);
+		
+		try {
+			conn = DBConnection.getConnection();
+			
+			String query = "insert into comment (c_content, c_writer, c_date, b_idx, c_group, c_order, c_depth) " 
+					+ "values (?, ?, ?, ?, ?, ?, ?)";
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, "　└" + comment.getC_content());
+			pstmt.setString(2, comment.getC_writer());
+			pstmt.setTimestamp(3, comment.getC_date());
+			pstmt.setInt(4, comment.getB_idx());
+			pstmt.setInt(5, comment.getC_group());
+			pstmt.setInt(6, comment.getC_order());
+			pstmt.setInt(7, comment.getC_depth());
+			pstmt.executeUpdate();
+			pstmt.close();
+			
+			query = "update comment "
+					+ "set c_order = c_order + 1 "
+					+ "where c_order >= " + comment.getC_order() + " and c_idx != last_insert_id() and c_group = " + comment.getC_group();
+			pstmt = conn.prepareStatement(query);
+			pstmt.executeUpdate();
+			
+			
+		} catch ( Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null)
+					pstmt.close();
+				if(conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
 }
 
 

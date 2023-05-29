@@ -142,7 +142,7 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 				
 			</td>
 		</tr>
-	</table>
+	</table>	
 		
 	<div class="cmt-container">
 		<div class="cmt-box1">
@@ -162,6 +162,17 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 							<div>
 								<span>${cmt.c_date}</span>
 							</div>
+							<button class="recmt-show-btn" onclick="showHiddenElements()">답글</button>
+							<form action="/tonysproject/recomment-create-process.do" method="POST">
+								<div class="recmt-editor" style="display: none;">
+									<textarea rows="3" cols="50" name="recmt-text"></textarea>
+									<input type="hidden" name="c_group" value="${cmt.c_group}"></input>
+									<input type="hidden" name="c_order" value="${cmt.c_order}"></input>
+									<input type="hidden" name="c_depth" value="${cmt.c_depth}"></input>
+									<input type="hidden" name="b_idx" value="${board.b_idx}" ></input>
+									<button type=submit class="recmt-submit-btn">작성</button>
+								</div>
+							</form>
 						</li>
 					</c:forEach>
 				</ul>
@@ -174,8 +185,17 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 				<button type="submit" class="origin-cmt-submit-btn">
 					작성
 				</button>
-		</div>
+			</div>
 		</form>
 	</div>
+	<script>
+		function showHiddenElements() {
+			var recmtEditor = document.querySelector(".recmt-editor");
+			recmtEditor.style.display = "block";
+		}
+/* 		document.getElementsByClassName("recmt-show-btn").addEventListener(
+				"click", showHiddenElements); */
+	</script>
 </body>
+
 </html>
