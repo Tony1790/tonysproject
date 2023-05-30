@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>${board.b_title}</title>
-</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <style>
 /* 전체 페이지 스타일링 */
 body {
@@ -110,6 +110,7 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 	margin : 0 auto;
 }
 </style>
+</head>
 <body>
 	<h1>게시글 상세페이지</h1>
 	<table class="container">
@@ -162,8 +163,8 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 							<div>
 								<span>${cmt.c_date}</span>
 							</div>
-							<button class="recmt-show-btn" onclick="showHiddenElements()">답글</button>
-							<form action="/tonysproject/recomment-create-process.do" method="POST">
+							<button class="recmt-show-btn btnCommentForm">답글</button>
+							<!-- form action="/tonysproject/recomment-create-process.do" method="POST">
 								<div class="recmt-editor" style="display: none;">
 									<textarea rows="3" cols="50" name="recmt-text"></textarea>
 									<input type="hidden" name="c_group" value="${cmt.c_group}"></input>
@@ -172,7 +173,12 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 									<input type="hidden" name="b_idx" value="${board.b_idx}" ></input>
 									<button type=submit class="recmt-submit-btn">작성</button>
 								</div>
-							</form>
+							</form -->
+						</li>
+						<li style="display: none">
+							<textarea rows="2" cols="80"></textarea>
+							<button type="button" class="btnRegComment" c_group="${cmt.c_group}">등록</button>
+							<button type="button">취소</button>
 						</li>
 					</c:forEach>
 				</ul>
@@ -193,8 +199,24 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 			var recmtEditor = document.querySelector(".recmt-editor");
 			recmtEditor.style.display = "block";
 		}
-/* 		document.getElementsByClassName("recmt-show-btn").addEventListener(
-				"click", showHiddenElements); */
+		
+		$(document).on('click', '.btnCommentForm', function () {
+			$(this).parent().next().css('display', '');
+			//console.log('sadfasfd');
+		});
+		
+		$(document).on('click', '.btnRegComment', function () {
+			$.ajax({
+			  method: "POST",
+			  url: "regComment.do",
+			  data: { name: "John", location: "Boston" }
+			})
+		    .done(function( msg ) {
+		      alert( "Data Saved: " + msg );
+		    });
+		});
+		
+		
 	</script>
 </body>
 

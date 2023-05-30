@@ -59,6 +59,7 @@ public class Controller extends HttpServlet {
 		Board board = null;
 		CommentService commentService = null;
 		Comment comment = null;
+		boolean isRedirected = false;
 		
 		switch (command) {
 			case "/user-list.do":
@@ -238,7 +239,9 @@ public class Controller extends HttpServlet {
 				//request.setAttribute("board", board);
 				//response.sendRedirect(request.getContextPath() + "/board-detail.do");
 				//redirect 하는 법?
-				view = "board/board-detail";
+				isRedirected = true;
+				view = "board-detail.do?b_idx=" + board.getB_idx();
+				//view = "board/board-detail";
 				break;
 				
 				
@@ -257,7 +260,8 @@ public class Controller extends HttpServlet {
 				comment.setC_depth(Integer.parseInt(request.getParameter("c_depth")));
 				commentService = CommentService.getInstance();
 				commentService.createRecomment(comment);
-				view = "board/board-detail";
+				isRedirected = true;
+				view = "board-detail.do?b_idx=" + board.getB_idx();
 				break;
 				
 				
@@ -294,9 +298,13 @@ public class Controller extends HttpServlet {
 				view = "user/access-denied";
 				break;
 		}
-		
-		RequestDispatcher rd = request.getRequestDispatcher(view+".jsp");
-		rd.forward(request, response);
+	
+		if (isRedirected) {
+			response.sendRedirect(view);
+		} else {
+			RequestDispatcher rd = request.getRequestDispatcher(view+".jsp");
+			rd.forward(request, response);
+		}
 	}
 	
 	String checkSession(HttpServletRequest request, HttpServletResponse response, String command) {

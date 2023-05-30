@@ -76,7 +76,7 @@ public class CommentDAO {
 					.append("select comment.*\n")
 					.append("from comment\n")
 					.append("where b_idx = ?\n")
-					.append("order by c_group desc, c_order asc")
+					.append("order by c_group asc, c_order asc")
 					.toString();
 			pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, bIdx);
@@ -95,12 +95,12 @@ public class CommentDAO {
 				comment.setC_depth(rs.getInt("c_depth"));
 				commentList.add(comment);
 			}
-			
+			rs.close();
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				rs.close();
+				
 				pstmt.close();
 				conn.close();
 			} catch (SQLException e) {
