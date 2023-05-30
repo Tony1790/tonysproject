@@ -153,33 +153,39 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 			<div class="cmt-list">
 				<ul>
 					<c:forEach items="${commentList}" var="cmt" varStatus="status">
-						<li>
-							<div>
-								<span>${cmt.c_writer}</span>
-							</div>
-							<div>
-								<span>${cmt.c_content}</span>
-							</div>
-							<div>
-								<span>${cmt.c_date}</span>
-							</div>
-							<button class="recmt-show-btn btnCommentForm">답글</button>
-							<!-- form action="/tonysproject/recomment-create-process.do" method="POST">
-								<div class="recmt-editor" style="display: none;">
-									<textarea rows="3" cols="50" name="recmt-text"></textarea>
-									<input type="hidden" name="c_group" value="${cmt.c_group}"></input>
-									<input type="hidden" name="c_order" value="${cmt.c_order}"></input>
-									<input type="hidden" name="c_depth" value="${cmt.c_depth}"></input>
-									<input type="hidden" name="b_idx" value="${board.b_idx}" ></input>
-									<button type=submit class="recmt-submit-btn">작성</button>
+							<li>
+								<div>
+									<span>${cmt.c_writer}</span>
 								</div>
-							</form -->
-						</li>
-						<li style="display: none">
-							<textarea rows="2" cols="80"></textarea>
-							<button type="button" class="btnRegComment" c_group="${cmt.c_group}">등록</button>
-							<button type="button">취소</button>
-						</li>
+								<div>
+									<span>${cmt.c_content}</span>
+								</div>
+								<div>
+									<span>${cmt.c_date}</span>
+								</div>
+								<button class="recmt-show-btn btnReCommentForm">답글</button>
+								<!-- form action="/tonysproject/recomment-create-process.do" method="POST">
+									<div class="recmt-editor" style="display: none;">
+										<textarea rows="3" cols="50" name="recmt-text"></textarea>
+										<input type="hidden" name="c_group" value="${cmt.c_group}"></input>
+										<input type="hidden" name="c_order" value="${cmt.c_order}"></input>
+										<input type="hidden" name="c_depth" value="${cmt.c_depth}"></input>
+										<input type="hidden" name="b_idx" value="${board.b_idx}" ></input>
+										<button type=submit class="recmt-submit-btn">작성</button>
+									</div>
+								</form -->
+								<li style="display: none">
+									<textarea rows="2" cols="80"></textarea>
+									<button type="button" class="recmt_submit_btn" 
+										c_group="${cmt.c_group}"
+										c_order="${cmt.c_order}"
+										c_depth="${cmt.c_depth}"
+										b_idx = "${board.b_idx}"
+										>등록</button>
+									<button type="button" class="recmt_cancel_btn">취소</button>
+								</li>
+							</li>
+							
 					</c:forEach>
 				</ul>
 			</div>
@@ -195,24 +201,37 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 		</form>
 	</div>
 	<script>
-		function showHiddenElements() {
-			var recmtEditor = document.querySelector(".recmt-editor");
-			recmtEditor.style.display = "block";
-		}
 		
-		$(document).on('click', '.btnCommentForm', function () {
-			$(this).parent().next().css('display', '');
-			//console.log('sadfasfd');
+		$(document).on('click', '.btnReCommentForm', function () {
+			console.log("asdasdf");
+			$(this).closest('li').next('li').css('display', 'block');
 		});
 		
-		$(document).on('click', '.btnRegComment', function () {
+		$(document).on('click', '.recmt_cancel_btn', function () {
+			console.log("asasdfasdf");
+			$(this).parent().css('display', 'none');
+		});
+		
+		$(document).on('click', '.recmt_submit_btn', function () {
+			let cGroup = $(this).attr('c_group');
+			let cOrder = $(this).attr('c_order');
+			let cDepth = $(this).attr('c_depth');
+			let bIdx = $(this).attr('b_idx');
+			let cContent = $(this).closest('li').find('textarea').val();
+
 			$.ajax({
 			  method: "POST",
-			  url: "regComment.do",
-			  data: { name: "John", location: "Boston" }
+			  url: "/tonysproject/recomment-create-process.do",
+			  data: {	c_group: cGroup,
+						c_order: cOrder,
+						c_depth: cDepth,
+						b_idx: bIdx,
+						c_content : cContent
+			  }
 			})
 		    .done(function( msg ) {
 		      alert( "Data Saved: " + msg );
+		      console.log(msg);
 		    });
 		});
 		

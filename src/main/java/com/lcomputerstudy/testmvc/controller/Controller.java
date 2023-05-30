@@ -252,7 +252,7 @@ public class Controller extends HttpServlet {
 				session = request.getSession();
 				user = (User)session.getAttribute("user");
 				comment.setC_writer(user.getU_id());
-				comment.setC_content(request.getParameter("recmt-text"));
+				comment.setC_content(request.getParameter("c_content"));
 				comment.setC_date(currentDateTime);
 				comment.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
 				comment.setC_group(Integer.parseInt(request.getParameter("c_group")));
