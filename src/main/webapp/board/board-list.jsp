@@ -72,6 +72,7 @@ a:hover {
 	<h2>게시글 목록</h2>
 	<a href = "/tonysproject/user-list.do">유저 목록 가기</a>
 	<a href="/tonysproject/board-create.do">게시글 작성하기</a>
+	<a href="/tonysproject/user-login.do">로그인</a>
 	<table>
 		<tr>
 			<!-- 여기에 전체 게시글 숫자 들어가야함 -->

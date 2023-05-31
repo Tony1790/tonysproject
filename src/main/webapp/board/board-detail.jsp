@@ -203,12 +203,12 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 	<script>
 		
 		$(document).on('click', '.btnReCommentForm', function () {
-			console.log("asdasdf");
+			
 			$(this).closest('li').next('li').css('display', 'block');
 		});
 		
 		$(document).on('click', '.recmt_cancel_btn', function () {
-			console.log("asasdfasdf");
+			
 			$(this).parent().css('display', 'none');
 		});
 		
@@ -221,7 +221,7 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 
 			$.ajax({
 			  method: "POST",
-			  url: "/tonysproject/recomment-create-process.do",
+			  url: "recomment-create-cmt-list.do",
 			  data: {	c_group: cGroup,
 						c_order: cOrder,
 						c_depth: cDepth,
@@ -230,8 +230,9 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 			  }
 			})
 		    .done(function( msg ) {
-		      alert( "Data Saved: " + msg );
-		      console.log(msg);
+		    	$('.cmt-list').html(msg);
+		      //alert( "Data Saved: " + msg );
+		      //console.log(msg);
 		    });
 		});
 		
