@@ -164,17 +164,8 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 									<span>${cmt.c_date}</span>
 								</div>
 								<button class="recmt-show-btn btnReCommentForm">답글</button>
-								<!-- form action="/tonysproject/recomment-create-process.do" method="POST">
-									<div class="recmt-editor" style="display: none;">
-										<textarea rows="3" cols="50" name="recmt-text"></textarea>
-										<input type="hidden" name="c_group" value="${cmt.c_group}"></input>
-										<input type="hidden" name="c_order" value="${cmt.c_order}"></input>
-										<input type="hidden" name="c_depth" value="${cmt.c_depth}"></input>
-										<input type="hidden" name="b_idx" value="${board.b_idx}" ></input>
-										<button type=submit class="recmt-submit-btn">작성</button>
-									</div>
-								</form -->
-								<li style="display: none">
+								<button class="recmt-edit-btn btnReCommentEdit">수정</button>
+								<li class="recmt-create-form" style="display: none">
 									<textarea rows="2" cols="80"></textarea>
 									<button type="button" class="recmt_submit_btn" 
 										c_group="${cmt.c_group}"
@@ -182,6 +173,18 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 										c_depth="${cmt.c_depth}"
 										b_idx = "${board.b_idx}"
 										>등록</button>
+									<button type="button" class="recmt_cancel_btn">취소</button>
+								</li>
+								<li class="recmt-edit-form" style="display: none">
+									<textarea rows="3" cols="80">${cmt.c_content}</textarea>
+									<button type="button" class="recmt_edit_submit_btn" 
+										c_group="${cmt.c_group}"
+										c_order="${cmt.c_order}"
+										c_depth="${cmt.c_depth}"
+										b_idx = "${cmt.b_idx}"
+										c_writer = "${cmt.c_writer}"
+										c_idx = "${cmt.c_idx}"
+										>등록</button>								
 									<button type="button" class="recmt_cancel_btn">취소</button>
 								</li>
 							</li>
@@ -208,9 +211,12 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 		});
 		
 		$(document).on('click', '.recmt_cancel_btn', function () {
-			
 			$(this).parent().css('display', 'none');
 		});
+		
+		$(document).on("click", ".recmt-edit-btn", function () {
+			$(this).closest('li').next('li').next('li').css('display', 'block');
+		})
 		
 		$(document).on('click', '.recmt_submit_btn', function () {
 			let cGroup = $(this).attr('c_group');
@@ -236,6 +242,32 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 		    });
 		});
 		
+		$(document).on('click', '.recmt_edit_submit_btn', function () {
+			let cGroup = $(this).attr('c_group');
+			let cOrder = $(this).attr('c_order');
+			let cDepth = $(this).attr('c_depth');
+			let bIdx = $(this).attr('b_idx');
+			let cContent = $(this).closest('li').find('textarea').val();
+			let cWriter = $(this).attr('c_writer');
+			let cIdx = $(this).attr('c_idx');
+			
+			$.ajax({
+			  method: "POST",
+			  url: "recomment-edit-cmt-list.do",
+			  data: {	c_group: cGroup,
+						c_order: cOrder,
+						c_depth: cDepth,
+						b_idx: bIdx,
+						c_content : cContent,
+						c_idx : cIdx
+			  }
+			})
+		    .done(function( msg ) {
+		    	$('.cmt-list').html(msg);
+		      //alert( "Data Saved: " + msg );
+		      //console.log(msg);
+		    });
+		});
 		
 	</script>
 </body>

@@ -32,4 +32,8 @@ public class CommentService {
 	public void createRecomment(Comment comment) {
 		dao.createRecomment(comment);
 	}
+	
+	public void editcomment(Comment comment) {
+		dao.editcomment(comment);
+	}
 }

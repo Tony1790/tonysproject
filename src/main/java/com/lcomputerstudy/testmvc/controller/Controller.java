@@ -244,26 +244,7 @@ public class Controller extends HttpServlet {
 				//view = "board/board-detail";
 				break;
 				
-				
-			/*			case "/recomment-create-process.do":
-							comment = new Comment();
-							board = new Board();
-							board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
-							session = request.getSession();
-							user = (User)session.getAttribute("user");
-							comment.setC_writer(user.getU_id());
-							comment.setC_content(request.getParameter("c_content"));
-							comment.setC_date(currentDateTime);
-							comment.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
-							comment.setC_group(Integer.parseInt(request.getParameter("c_group")));
-							comment.setC_order(Integer.parseInt(request.getParameter("c_order")));
-							comment.setC_depth(Integer.parseInt(request.getParameter("c_depth")));
-							commentService = CommentService.getInstance();
-							commentService.createRecomment(comment);
-							isRedirected = true;
-							view = "board-detail.do?b_idx=" + board.getB_idx();
-							break;
-			*/				
+							
 			case "/recomment-create-cmt-list.do":
 				comment = new Comment();
 				board = new Board();
@@ -286,6 +267,22 @@ public class Controller extends HttpServlet {
 				// 대댓글 처리 후 전체 댓글과 대댓글을 jsp파일로 보냄.
 				view = "comment/recmt-process";
 				break;
+				
+				
+			case "/recomment-edit-cmt-list.do":
+				//향후 작성자가 아닐 경우를 구별해야함
+				comment = new Comment();
+				comment.setC_idx(Integer.parseInt(request.getParameter("c_idx")));
+				comment.setC_content(request.getParameter("c_content"));
+				comment.setC_date(currentDateTime);
+				commentService = CommentService.getInstance();
+				commentService.editcomment(comment);
+				
+				ArrayList<Comment> commentList3 = commentService.getComments(Integer.parseInt(request.getParameter("b_idx")));
+				request.setAttribute("commentList2", commentList3);
+				view = "comment/recmt-process";
+				break;
+				
 				
 			case "/user-login.do":
 				view = "user/login";

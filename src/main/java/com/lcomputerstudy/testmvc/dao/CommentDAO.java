@@ -154,6 +154,34 @@ public class CommentDAO {
 		}
 		
 	}
+
+	public void editcomment(Comment comment) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = DBConnection.getConnection();
+			
+			String sql = "update comment set c_content=?, c_date=? where c_idx=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, comment.getC_content());
+			pstmt.setTimestamp(2, comment.getC_date());
+			pstmt.setInt(3, comment.getC_idx());
+			pstmt.executeUpdate();
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) 
+					pstmt.close();
+				if(conn != null)
+					conn.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }
 
 
