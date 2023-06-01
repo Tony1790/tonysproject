@@ -74,7 +74,7 @@ a:hover {
 	<a href="/tonysproject/board-create.do">게시글 작성하기</a>
 	<a href="/tonysproject/user-login.do">로그인</a>
 	
-	<form action="" method="get" class="search_form">
+	<form action="search-board.do" method="get" class="search_form">
 		<select name="search_option" class="search_option">
 			<option value="">검색</option>
 			<option value="제목">제목</option>

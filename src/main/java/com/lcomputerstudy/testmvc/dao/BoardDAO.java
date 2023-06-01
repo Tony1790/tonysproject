@@ -160,16 +160,16 @@ public class BoardDAO {
 		
 		switch(search.getCategory()) {
 		case "제목":
-			where = "b_title LIKE %?%";
+			where = "where b_title LIKE ?\n";
 			break;
 		case "내용":
-			where = "b_content LIKE %?%";
+			where = "where b_content LIKE ?\n";
 			break;
 		case "제목+내용":
-			where = "b_title LIKE %?% or b_content LIKE %?%";
+			where = "where b_title LIKE ? or b_content LIKE ?\n";
 			break;
 		case "작성자":
-			where = "b_writer LIKE %?%";
+			where = "where b_writer LIKE ?\n";
 			break;
 		default:
 			break;
@@ -191,11 +191,11 @@ public class BoardDAO {
 			case "":
 				break;
 			case "제목+내용":
-				pstmt.setString(1, search.getKeyword());
-				pstmt.setString(2, search.getKeyword());
+				pstmt.setString(1, "%" + search.getKeyword() + "%");
+				pstmt.setString(2, "%" + search.getKeyword() + "%");
 				break;
 			default:
-				pstmt.setString(1, search.getKeyword());
+				pstmt.setString(1, "%" + search.getKeyword() + "%");
 				break;
 			}
 			

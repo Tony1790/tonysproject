@@ -303,9 +303,8 @@ public class Controller extends HttpServlet {
 				boardService = BoardService.getInstance();
 				ArrayList<Board> boardList2 = boardService.getBoards(search); 
 				request.setAttribute("boardList", boardList2);
-				isRedirected = true;
-				view = "board-list.do";
-				
+				view = "board/board-list";
+				break;
 			case "/user-login.do":
 				view = "user/login";
 				break;
