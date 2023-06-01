@@ -73,6 +73,18 @@ a:hover {
 	<a href = "/tonysproject/user-list.do">유저 목록 가기</a>
 	<a href="/tonysproject/board-create.do">게시글 작성하기</a>
 	<a href="/tonysproject/user-login.do">로그인</a>
+	
+	<form action="" method="get" class="search_form">
+		<select name="search_option" class="search_option">
+			<option value="">검색</option>
+			<option value="제목">제목</option>
+			<option value="내용" >내용</option>
+			<option value="제목+내용" >제목+내용</option>
+			<option value="작성자" >작성자</option>
+		</select>
+		<input type="text" name="keyword" class="search_keyword" size=10></input>
+		<button type=submit class="search_btn">검색</button>
+	</form>
 	<table>
 		<tr>
 			<!-- 여기에 전체 게시글 숫자 들어가야함 -->
@@ -90,7 +102,7 @@ a:hover {
 			<tr>
 				<td><a href="/tonysproject/board-detail.do?b_idx=${item.b_idx}">${item.b_idx}</a></td>
 				<td>${item.b_title}</td>
-				<td>${item.b_content}</td>
+				<td>${item.b_writer}</td>
 				<td>${item.b_date}</td>
 				<td>${item.b_view}</td>
 			</tr>

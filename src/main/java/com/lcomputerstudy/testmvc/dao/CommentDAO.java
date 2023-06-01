@@ -123,7 +123,7 @@ public class CommentDAO {
 			String query = "insert into comment (c_content, c_writer, c_date, b_idx, c_group, c_order, c_depth) " 
 					+ "values (?, ?, ?, ?, ?, ?, ?)";
 			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, "　└" + comment.getC_content());
+			pstmt.setString(1, " └" + comment.getC_content());
 			pstmt.setString(2, comment.getC_writer());
 			pstmt.setTimestamp(3, comment.getC_date());
 			pstmt.setInt(4, comment.getB_idx());
@@ -181,6 +181,34 @@ public class CommentDAO {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void deleteComment(Comment comment) {
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = DBConnection.getConnection();
+			
+			String query = "delete from comment where c_idx = ?";
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, comment.getC_idx());
+			pstmt.executeUpdate();
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) 
+					pstmt.close();
+				if(conn != null)
+					conn.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 }
 

@@ -165,13 +165,14 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 								</div>
 								<button class="recmt-show-btn btnReCommentForm">답글</button>
 								<button class="recmt-edit-btn btnReCommentEdit">수정</button>
+								<button type=button class="recmt-delete-btn btnReCommentdelete" c_idx = "${cmt.c_idx}" b_idx = "${cmt.b_idx}" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
 								<li class="recmt-create-form" style="display: none">
 									<textarea rows="2" cols="80"></textarea>
 									<button type="button" class="recmt_submit_btn" 
 										c_group="${cmt.c_group}"
 										c_order="${cmt.c_order}"
 										c_depth="${cmt.c_depth}"
-										b_idx = "${board.b_idx}"
+										b_idx = "${cmt.b_idx}"
 										>등록</button>
 									<button type="button" class="recmt_cancel_btn">취소</button>
 								</li>
@@ -217,6 +218,24 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 		$(document).on("click", ".recmt-edit-btn", function () {
 			$(this).closest('li').next('li').next('li').css('display', 'block');
 		})
+		
+		$(document).on('click', '.recmt-delete-btn', function() {
+			let cIdx = $(this).attr('c_idx');
+			let bIdx = $(this).attr('b_idx');
+			
+			$.ajax({
+				  method: "POST",
+				  url: "recomment-delete-cmt.do",
+				  data: {	c_idx : cIdx,
+					  		b_idx: bIdx
+				  }
+				})
+			    .done(function( msg ) {
+			    	$('.cmt-list').html(msg);
+
+			    });
+		})
+		
 		
 		$(document).on('click', '.recmt_submit_btn', function () {
 			let cGroup = $(this).attr('c_group');

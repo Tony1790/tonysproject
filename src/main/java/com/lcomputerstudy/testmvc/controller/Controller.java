@@ -21,6 +21,7 @@ import com.lcomputerstudy.testmvc.service.UserService;
 import com.lcomputerstudy.testmvc.service.CommentService;
 import com.lcomputerstudy.testmvc.vo.Board;
 import com.lcomputerstudy.testmvc.vo.Pagination;
+import com.lcomputerstudy.testmvc.vo.Search;
 import com.lcomputerstudy.testmvc.vo.User;
 import com.lcomputerstudy.testmvc.vo.Comment;
 
@@ -59,6 +60,7 @@ public class Controller extends HttpServlet {
 		Board board = null;
 		CommentService commentService = null;
 		Comment comment = null;
+		Search search = null;
 		boolean isRedirected = false;
 		
 		switch (command) {
@@ -132,7 +134,7 @@ public class Controller extends HttpServlet {
 			
 			case "/board-list.do":
 				boardService = BoardService.getInstance();
-				ArrayList<Board> boardList = boardService.getBoards(); 
+				ArrayList<Board> boardList = boardService.getBoards();					
 				view = "board/board-list";
 				request.setAttribute("boardList", boardList);
 				break;
@@ -263,7 +265,7 @@ public class Controller extends HttpServlet {
 				//대댓글 처리 과정
 				
 				ArrayList<Comment> commentList2 = commentService.getComments(Integer.parseInt(request.getParameter("b_idx")));
-				request.setAttribute("commentList2", commentList2);
+				request.setAttribute("commentList", commentList2);
 				// 대댓글 처리 후 전체 댓글과 대댓글을 jsp파일로 보냄.
 				view = "comment/recmt-process";
 				break;
@@ -279,10 +281,30 @@ public class Controller extends HttpServlet {
 				commentService.editcomment(comment);
 				
 				ArrayList<Comment> commentList3 = commentService.getComments(Integer.parseInt(request.getParameter("b_idx")));
-				request.setAttribute("commentList2", commentList3);
+				request.setAttribute("commentList", commentList3);
 				view = "comment/recmt-process";
 				break;
 				
+			case "/recomment-delete-cmt.do":
+				comment = new Comment();
+				comment.setC_idx(Integer.parseInt(request.getParameter("c_idx")));
+				commentService = CommentService.getInstance();
+				commentService.deleteComment(comment);
+				
+				ArrayList<Comment> commentList4 = commentService.getComments(Integer.parseInt(request.getParameter("b_idx")));
+				request.setAttribute("commentList", commentList4);
+				view = "comment/recmt-process";
+				break;
+				
+			case "/search-board.do":
+				search = new Search();
+				search.setCategory(request.getParameter("search_option"));
+				search.setKeyword(request.getParameter("keyword"));
+				boardService = BoardService.getInstance();
+				ArrayList<Board> boardList2 = boardService.getBoards(search); 
+				request.setAttribute("boardList", boardList2);
+				isRedirected = true;
+				view = "board-list.do";
 				
 			case "/user-login.do":
 				view = "user/login";

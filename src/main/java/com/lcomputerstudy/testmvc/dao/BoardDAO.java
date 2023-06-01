@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import com.lcomputerstudy.testmvc.database.DBConnection;
 import com.lcomputerstudy.testmvc.vo.Board;
 import com.lcomputerstudy.testmvc.vo.Pagination;
+import com.lcomputerstudy.testmvc.vo.Search;
 import com.lcomputerstudy.testmvc.vo.User;
 import java.time.LocalDateTime;
 
@@ -118,6 +119,88 @@ public class BoardDAO {
 					.toString();
 			pstmt = conn.prepareStatement(query);
 			rs = pstmt.executeQuery();
+			
+			boardList = new ArrayList<Board>();
+			
+			while(rs.next()) {
+				Board board = new Board();
+				board.setB_idx(rs.getInt("b_idx"));
+				board.setB_title(rs.getString("b_title"));
+				board.setB_content(rs.getString("b_content"));
+				board.setB_date(rs.getTimestamp("b_date"));
+				board.setB_writer(rs.getString("b_writer"));
+				board.setU_idx(rs.getInt("u_idx"));
+				board.setB_view(rs.getInt("b_view"));
+				boardList.add(board);
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return boardList;
+	}
+	
+	public ArrayList<Board> getBoards(Search search) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ArrayList<Board> boardList = null;
+		
+		String where = "";
+		
+		if(search.getCategory() == null)
+			search.setCategory("");
+		
+		switch(search.getCategory()) {
+		case "제목":
+			where = "b_title LIKE %?%";
+			break;
+		case "내용":
+			where = "b_content LIKE %?%";
+			break;
+		case "제목+내용":
+			where = "b_title LIKE %?% or b_content LIKE %?%";
+			break;
+		case "작성자":
+			where = "b_writer LIKE %?%";
+			break;
+		default:
+			break;
+		}
+		
+		
+		
+		try {
+			conn = DBConnection.getConnection();
+			
+			String query = new StringBuilder()
+					.append("select board.*\n")
+					.append("from board\n")
+					.append(where)
+					.append("order by b_group desc, b_order asc")
+					.toString();
+			pstmt = conn.prepareStatement(query);
+			switch(search.getCategory()) {
+			case "":
+				break;
+			case "제목+내용":
+				pstmt.setString(1, search.getKeyword());
+				pstmt.setString(2, search.getKeyword());
+				break;
+			default:
+				pstmt.setString(1, search.getKeyword());
+				break;
+			}
+			
+			rs = pstmt.executeQuery();
+			
 			boardList = new ArrayList<Board>();
 			
 			while(rs.next()) {
@@ -245,8 +328,6 @@ public class BoardDAO {
 			}
 		}
 	}
-	
-	
 }
 
 
