@@ -19,7 +19,7 @@
 	<form action="/tonysproject/reboard-create-process.do" name="board" method="POST">
 		<input type="hidden" name="u_idx" value="${user.u_idx}">	
 		<input type="hidden" name="b_group" value="${board.b_group}">	
-		<%-- <input type="hidden" name="b_idx" value="${board.b_idx}"> --%>	
+		<input type="hidden" name="b_idx" value="${board.b_idx}">	
 		<input type="hidden" name="b_order" value="${board.b_order}">	
 		<input type="hidden" name="b_depth" value="${board.b_depth}">	
 		

@@ -102,61 +102,21 @@ public class BoardDAO {
 			}
 		}
 	}
-
-	public ArrayList<Board> getBoards() {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		ArrayList<Board> boardList = null;
-		
-		try {
-			conn = DBConnection.getConnection();
-			
-			String query = new StringBuilder()
-					.append("select board.*\n")
-					.append("from board\n")
-					.append("order by b_group desc, b_order asc")
-					.toString();
-			pstmt = conn.prepareStatement(query);
-			rs = pstmt.executeQuery();
-			
-			boardList = new ArrayList<Board>();
-			
-			while(rs.next()) {
-				Board board = new Board();
-				board.setB_idx(rs.getInt("b_idx"));
-				board.setB_title(rs.getString("b_title"));
-				board.setB_content(rs.getString("b_content"));
-				board.setB_date(rs.getTimestamp("b_date"));
-				board.setB_writer(rs.getString("b_writer"));
-				board.setU_idx(rs.getInt("u_idx"));
-				board.setB_view(rs.getInt("b_view"));
-				boardList.add(board);
-			}
-		}catch(Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				rs.close();
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return boardList;
-	}
 	
-	public ArrayList<Board> getBoards(Search search) {
+	public ArrayList<Board> getBoards(Search search, Pagination pagination) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		ArrayList<Board> boardList = null;
+		int pageNum = pagination.getPageNum();
 		
 		String where = "";
 		
-		if(search.getCategory() == null)
+		if(search.getCategory() == null) {
+			search = new Search();
+			search.setKeyword("");
 			search.setCategory("");
+		}
 		
 		switch(search.getCategory()) {
 		case "제목":
@@ -184,23 +144,30 @@ public class BoardDAO {
 					.append("select board.*\n")
 					.append("from board\n")
 					.append(where)
-					.append("order by b_group desc, b_order asc")
+					.append("order by b_group desc, b_order asc\n")
+					.append("limit ?,?")
 					.toString();
 			pstmt = conn.prepareStatement(query);
+			
 			switch(search.getCategory()) {
 			case "":
+				pstmt.setInt(1, pageNum);
+				pstmt.setInt(2, Pagination.perPage);
 				break;
 			case "제목+내용":
 				pstmt.setString(1, "%" + search.getKeyword() + "%");
 				pstmt.setString(2, "%" + search.getKeyword() + "%");
+				pstmt.setInt(3, pageNum);
+				pstmt.setInt(4, Pagination.perPage);
 				break;
 			default:
 				pstmt.setString(1, "%" + search.getKeyword() + "%");
+				pstmt.setInt(3, pageNum);
+				pstmt.setInt(4, Pagination.perPage);
 				break;
 			}
 			
 			rs = pstmt.executeQuery();
-			
 			boardList = new ArrayList<Board>();
 			
 			while(rs.next()) {
@@ -327,6 +294,36 @@ public class BoardDAO {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public int getBoardsCount() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int count = 0;
+		
+		try {
+			conn = DBConnection.getConnection();
+			String query = "select count(*) AS count from board";
+			pstmt = conn.prepareStatement(query);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				count = rs.getInt("count");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
 	}
 }
 

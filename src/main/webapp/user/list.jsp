@@ -100,7 +100,7 @@
 					</c:choose>
 				</c:forEach>
 				 <c:choose>
-					<c:when test="${ pagination.nextPage lt pagination.lastPage }">
+					<c:when test="${ pagination.nextPage <= pagination.lastPage }">
 						<li style="">
 							<a href="user-list.do?page=${pagination.nextPage}">▶</a>
 						</li>

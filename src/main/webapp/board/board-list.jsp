@@ -66,6 +66,7 @@ a:hover {
 	font-size: 16px;
 	font-weight: bold;
 	color: #333;
+	height: 35px;
 }
 </Style>
 <body>
@@ -74,7 +75,7 @@ a:hover {
 	<a href="/tonysproject/board-create.do">게시글 작성하기</a>
 	<a href="/tonysproject/user-login.do">로그인</a>
 	
-	<form action="search-board.do" method="get" class="search_form">
+	<form action="board-list.do" method="get" class="search_form">
 		<select name="search_option" class="search_option">
 			<option value="">검색</option>
 			<option value="제목">제목</option>
@@ -88,7 +89,7 @@ a:hover {
 	<table>
 		<tr>
 			<!-- 여기에 전체 게시글 숫자 들어가야함 -->
-			<th class = "total_count_board">전체 게시글 수</th>
+			<th class = "total_count_board" colspan="5">전체 게시글 수 : ${pagination.count}</th>
 		</tr>
 		<tr>
 			<th>No</th>
@@ -108,5 +109,42 @@ a:hover {
 			</tr>
 		</c:forEach>
 	</table>
+	
+	<div>
+			<div>
+			<ul>
+				<c:choose>
+					<c:when test="${pagination.prevPage >= 1 }">
+						<li>
+							<a href="board-list.do?page=${pagination.prevPage}">
+								◀️
+							</a>
+						</li>
+					</c:when>
+				</c:choose>
+				<c:forEach var = "i" begin="${pagination.startPage}" end="${pagination.endPage}" step="1">
+					<c:choose>
+						<c:when test="${ pagination.page eq i }">
+							<li style="background-color:#ededed;">
+								<span>${i}</span>
+							</li>
+						</c:when>
+						<c:when test="${pagination.page ne i}">
+							<li>
+								<a href="board-list.do?page=${i}">${i}</a>
+							</li>
+						</c:when>
+					</c:choose>
+				</c:forEach>
+				 <c:choose>
+					<c:when test="${ pagination.nextPage <= pagination.lastPage }">
+						<li style="">
+							<a href="board-list.do?page=${pagination.nextPage}">▶</a>
+						</li>
+					</c:when>
+				</c:choose> 
+			</ul>
+		</div>
+		</div>
 </body>
 </html>

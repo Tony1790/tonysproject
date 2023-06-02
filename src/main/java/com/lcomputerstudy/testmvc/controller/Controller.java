@@ -64,22 +64,7 @@ public class Controller extends HttpServlet {
 		boolean isRedirected = false;
 		
 		switch (command) {
-			case "/user-list.do":
-				String reqPage = request.getParameter("page");
-				if(reqPage != null) {
-					page = Integer.parseInt(reqPage);
-				}
-				userService = UserService.getInstance();
-				count = userService.getUsersCount();
-				pagination = new Pagination();
-				pagination.setPage(page);
-				pagination.setCount(count);
-				pagination.init();
-				ArrayList<User> list = userService.getUsers(pagination);
-				view = "user/list";
-				request.setAttribute("list", list);
-				request.setAttribute("pagination", pagination);
-				break;
+			
 			case "/user-insert.do":
 				view = "user/insert";
 				break;
@@ -131,13 +116,47 @@ public class Controller extends HttpServlet {
 				break;
 			
 			
-			
+			case "/user-list.do":
+				String reqPage = request.getParameter("page");
+				if(reqPage != null) {
+					page = Integer.parseInt(reqPage);
+				}
+				userService = UserService.getInstance();
+				count = userService.getUsersCount();
+				pagination = new Pagination();
+				pagination.setPage(page);
+				pagination.setCount(count);
+				pagination.init();
+				ArrayList<User> list = userService.getUsers(pagination);
+				view = "user/list";
+				request.setAttribute("list", list);
+				request.setAttribute("pagination", pagination);
+				break;
+				
 			case "/board-list.do":
+				reqPage = request.getParameter("page");
+				if(reqPage != null) {
+					page = Integer.parseInt(reqPage);
+				}
+				
+				search = new Search();
+				search.setCategory(request.getParameter("search_option"));
+				search.setKeyword(request.getParameter("keyword"));
+				
 				boardService = BoardService.getInstance();
-				ArrayList<Board> boardList = boardService.getBoards();					
+				count = boardService.getBoardsCount();
+				
+				pagination = new Pagination();
+				pagination.setPage(page);
+				pagination.setCount(count);
+				pagination.init();
+				
+				ArrayList<Board> boardList = boardService.getBoards(search, pagination);					
 				view = "board/board-list";
 				request.setAttribute("boardList", boardList);
+				request.setAttribute("pagination", pagination);
 				break;
+				
 			case "/board-detail.do":
 				board = new Board();
 				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
@@ -296,15 +315,7 @@ public class Controller extends HttpServlet {
 				view = "comment/recmt-process";
 				break;
 				
-			case "/search-board.do":
-				search = new Search();
-				search.setCategory(request.getParameter("search_option"));
-				search.setKeyword(request.getParameter("keyword"));
-				boardService = BoardService.getInstance();
-				ArrayList<Board> boardList2 = boardService.getBoards(search); 
-				request.setAttribute("boardList", boardList2);
-				view = "board/board-list";
-				break;
+			
 			case "/user-login.do":
 				view = "user/login";
 				break;

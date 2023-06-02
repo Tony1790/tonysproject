@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.lcomputerstudy.testmvc.dao.BoardDAO;
 import com.lcomputerstudy.testmvc.vo.Board;
+import com.lcomputerstudy.testmvc.vo.Pagination;
 import com.lcomputerstudy.testmvc.vo.Search;
 
 public class BoardService {
@@ -26,12 +27,8 @@ public class BoardService {
 		dao.createBoard(board);
 	}
 	
-	public ArrayList<Board> getBoards(Search search) {
-		return dao.getBoards(search);
-	}
-	
-	public ArrayList<Board> getBoards() {
-		return dao.getBoards();
+	public ArrayList<Board> getBoards(Search search, Pagination pagination) {
+		return dao.getBoards(search, pagination);
 	}
 	
 	public Board getBoard(Board board) {
@@ -48,5 +45,9 @@ public class BoardService {
 	
 	public void createReboard(Board board) {
 		dao.createReboard(board);
+	}
+	
+	public int getBoardsCount() {
+		return dao.getBoardsCount();
 	}
 }
