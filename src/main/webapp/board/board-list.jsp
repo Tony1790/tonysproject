@@ -138,7 +138,7 @@ a:hover {
 				</c:forEach>
 				 <c:choose>
 					<c:when test="${ pagination.nextPage <= pagination.lastPage }">
-						<li style="">
+						<li>
 							<a href="board-list.do?page=${pagination.nextPage}">▶</a>
 						</li>
 					</c:when>
