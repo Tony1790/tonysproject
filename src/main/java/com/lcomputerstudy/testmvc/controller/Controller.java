@@ -241,7 +241,7 @@ public class Controller extends HttpServlet {
 				boardService = BoardService.getInstance();
 				boardService.createReboard(board);
 				view = "board/reboard-create-result";
-				
+				break;
 				
 				
 				

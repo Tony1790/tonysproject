@@ -68,6 +68,21 @@ a:hover {
 	color: #333;
 	height: 35px;
 }
+ul {
+		width : 500px;
+		height : 50px;
+		margin: 10px auto;
+	}
+li {
+		list-style : none;
+		width : 50px;
+		height : 50px;
+		border: 1px solid #ededed;
+		float: left;
+		text-align: center;
+		margin: 0 5px;
+		border-radius: 5px;
+	}
 </Style>
 <body>
 	<h2>게시글 목록</h2>
@@ -109,42 +124,39 @@ a:hover {
 			</tr>
 		</c:forEach>
 	</table>
-	
 	<div>
-			<div>
-			<ul>
+		<ul>
+			<c:choose>
+				<c:when test="${pagination.prevPage >= 1 }">
+					<li>
+						<a href="board-list.do?page=${pagination.prevPage}">
+							◀️
+						</a>
+					</li>
+				</c:when>
+			</c:choose>
+			<c:forEach var = "i" begin="${pagination.startPage}" end="${pagination.endPage}" step="1">
 				<c:choose>
-					<c:when test="${pagination.prevPage >= 1 }">
+					<c:when test="${ pagination.page eq i }">
+						<li style="background-color:#ededed;">
+							<span>${i}</span>
+						</li>
+					</c:when>
+					<c:when test="${pagination.page ne i}">
 						<li>
-							<a href="board-list.do?page=${pagination.prevPage}">
-								◀️
-							</a>
+							<a href="board-list.do?page=${i}">${i}</a>
 						</li>
 					</c:when>
 				</c:choose>
-				<c:forEach var = "i" begin="${pagination.startPage}" end="${pagination.endPage}" step="1">
-					<c:choose>
-						<c:when test="${ pagination.page eq i }">
-							<li style="background-color:#ededed;">
-								<span>${i}</span>
-							</li>
-						</c:when>
-						<c:when test="${pagination.page ne i}">
-							<li>
-								<a href="board-list.do?page=${i}">${i}</a>
-							</li>
-						</c:when>
-					</c:choose>
-				</c:forEach>
-				 <c:choose>
-					<c:when test="${ pagination.nextPage <= pagination.lastPage }">
-						<li>
-							<a href="board-list.do?page=${pagination.nextPage}">▶</a>
-						</li>
-					</c:when>
-				</c:choose> 
-			</ul>
-		</div>
-		</div>
+			</c:forEach>
+			 <c:choose>
+				<c:when test="${ pagination.nextPage <= pagination.lastPage }">
+					<li>
+						<a href="board-list.do?page=${pagination.nextPage}">▶</a>
+					</li>
+				</c:when>
+			</c:choose> 
+		</ul>
+	</div>
 </body>
 </html>

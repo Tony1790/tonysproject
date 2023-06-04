@@ -23,7 +23,7 @@
 		<input type="hidden" name="b_order" value="${board.b_order}">	
 		<input type="hidden" name="b_depth" value="${board.b_depth}">	
 		
-		<p class="title"> 제목 : <input type="text" name="title" maxlength="20"></p>
+		<p class="title"> 제목 : <input type="text" maxlength="20"></p>
 		<textarea class="content" name="content" placeholder="내용 : "></textarea>
 		
 		<p><input type="submit" value="작성"/></p>
