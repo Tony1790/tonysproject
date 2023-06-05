@@ -6,7 +6,6 @@
 <head>
 <meta charset="UTF-8">
 <title>회원 목록2</title>
-</head>
 <style>
 	body {
 	padding : 10px 50px;
@@ -52,24 +51,36 @@
 		border-radius: 5px;
 	}
 </style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+</head>
 <body>
 	<h2>회원 목록</h2>
 	<a class="newJoin" href="user-insert.do"><h3>회원 가입</h3></a>
 	<a href="board-list.do">게시글 목록</a>
 		<table>
 			<tr>
-				<td colspan="3">전체 회원 수 : ${pagination.count}</td>
+				<td colspan="4">전체 회원 수 : ${pagination.count}</td>
 			</tr>	
 			<tr>
 				<th>No</th>
 				<th>ID</th>
 				<th>이름</th>
+				<th>회원등급</th>
 			</tr>
 			<c:forEach items="${list}" var="item" varStatus="status">
 				<tr>
 					<td><a href="/tonysproject/user-detail.do?u_idx=${item.u_idx}">${item.u_idx}</a></td>
 					<td>${item.u_id}</td>
 					<td>${item.u_name}</td>
+					<td>
+						<form action="user-list.do" method="POST">
+							<input type="hidden" value="${item.u_idx}"></input>
+							<input type="hidden" value="${item.u_auth}"></input>
+							<button type="submit" class="change_membership_grade_btn">${item.u_auth}
+							</button>
+						</form>
+					</td>
+					
 				</tr>
 			</c:forEach>
 		</table>
@@ -109,6 +120,9 @@
 			</ul>
 		</div>
 </body>
+<script>
+	//$(document).(queryselector)
+</script>
 </html>
 
 

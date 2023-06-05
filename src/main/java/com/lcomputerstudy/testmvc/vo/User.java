@@ -7,7 +7,14 @@ public class User {
 	private String u_name;
 	private String u_tel;
 	private String u_age;
+	private int u_auth;
 	
+	public int getU_auth() {
+		return u_auth;
+	}
+	public void setU_auth(int u_auth) {
+		this.u_auth = u_auth;
+	}
 	public int getU_idx() {
 		return u_idx;
 	}

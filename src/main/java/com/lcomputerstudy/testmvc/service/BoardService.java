@@ -47,7 +47,7 @@ public class BoardService {
 		dao.createReboard(board);
 	}
 	
-	public int getBoardsCount() {
-		return dao.getBoardsCount();
+	public int getBoardsCount(Search search) {
+		return dao.getBoardsCount(search);
 	}
 }

@@ -121,8 +121,15 @@ public class Controller extends HttpServlet {
 				if(reqPage != null) {
 					page = Integer.parseInt(reqPage);
 				}
+				user = new User();
+				//error!!!!!
+				user.setU_idx(Integer.parseInt(request.getParameter("u_idx")));
+				user.setU_auth(Integer.parseInt(request.getParameter("u_auth")));
+				
 				userService = UserService.getInstance();
+				
 				count = userService.getUsersCount();
+				userService.changeMembership(user);
 				pagination = new Pagination();
 				pagination.setPage(page);
 				pagination.setCount(count);
@@ -132,6 +139,16 @@ public class Controller extends HttpServlet {
 				request.setAttribute("list", list);
 				request.setAttribute("pagination", pagination);
 				break;
+			/*
+			case "/user-membership-change.do":
+			user = new User();
+			user.setU_idx(Integer.parseInt(request.getParameter("u_idx")));
+			user.setU_auth(Integer.parseInt(request.getParameter("u_auth")));
+			userService = UserService.getInstance();
+			userService.changeMembership(user);
+			isRedirected = true;
+			view = "user-list.do";
+			break;*/
 				
 			case "/board-list.do":
 				reqPage = request.getParameter("page");
@@ -144,7 +161,7 @@ public class Controller extends HttpServlet {
 				search.setKeyword(request.getParameter("keyword"));
 				
 				boardService = BoardService.getInstance();
-				count = boardService.getBoardsCount();
+				count = boardService.getBoardsCount(search);
 				
 				pagination = new Pagination();
 				pagination.setPage(page);
@@ -155,6 +172,7 @@ public class Controller extends HttpServlet {
 				view = "board/board-list";
 				request.setAttribute("boardList", boardList);
 				request.setAttribute("pagination", pagination);
+				request.setAttribute("search", search);
 				break;
 				
 			case "/board-detail.do":
@@ -316,6 +334,7 @@ public class Controller extends HttpServlet {
 				break;
 				
 			
+				
 			case "/user-login.do":
 				view = "user/login";
 				break;
@@ -361,7 +380,6 @@ public class Controller extends HttpServlet {
 		HttpSession session = request.getSession();
 		
 		String[] authList = {
-				"/user-list.do",
 				"/user-detail.do",
 				"/user-edit.do",
 				"/user-edit-process.do",

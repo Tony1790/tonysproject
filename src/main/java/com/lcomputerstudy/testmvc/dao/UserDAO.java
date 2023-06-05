@@ -52,6 +52,7 @@ public class UserDAO {
        	       	user.setU_name(rs.getString("u_name"));
        	       	user.setU_tel(rs.getString("u_tel"));
        	       	user.setU_age(rs.getString("u_age"));
+       	       	user.setU_auth(rs.getInt("u_auth"));
        	       	list.add(user);
 			}
 		} catch (Exception e) {
@@ -254,6 +255,30 @@ public class UserDAO {
 			}
 		}
 		return user;
+	}
+	
+	public void changeMembership(User user) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = DBConnection.getConnection();
+			String query = "update user set u_auth = ? where u_idx = ?";
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, user.getU_auth());
+			pstmt.setInt(1, user.getU_idx());
+			pstmt.executeUpdate();
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt !=  null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
 

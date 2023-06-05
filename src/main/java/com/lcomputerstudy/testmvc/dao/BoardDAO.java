@@ -162,8 +162,8 @@ public class BoardDAO {
 				break;
 			default:
 				pstmt.setString(1, "%" + search.getKeyword() + "%");
-				pstmt.setInt(3, pageNum);
-				pstmt.setInt(4, Pagination.perPage);
+				pstmt.setInt(2, pageNum);
+				pstmt.setInt(3, Pagination.perPage);
 				break;
 			}
 			
@@ -296,16 +296,57 @@ public class BoardDAO {
 		}
 	}
 	
-	public int getBoardsCount() {
+	public int getBoardsCount(Search search) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		int count = 0;
+		String where = "";
+		
+		if(search.getCategory() == null) {
+			search = new Search();
+			search.setKeyword("");
+			search.setCategory("");
+		}
+		
+		switch(search.getCategory()) {
+		case "제목":
+			where = "where b_title LIKE ?\n";
+			break;
+		case "내용":
+			where = "where b_content LIKE ?\n";
+			break;
+		case "제목+내용":
+			where = "where b_title LIKE ? or b_content LIKE ?\n";
+			break;
+		case "작성자":
+			where = "where b_writer LIKE ?\n";
+			break;
+		default:
+			break;
+		}
 		
 		try {
 			conn = DBConnection.getConnection();
-			String query = "select count(*) AS count from board";
+			String query = new StringBuilder()
+					.append("select count(*) AS count\n")
+					.append("from board\n")
+					.append(where)
+					.toString();
 			pstmt = conn.prepareStatement(query);
+			
+			switch(search.getCategory()) {
+			case "":
+				break;
+			case "제목+내용":
+				pstmt.setString(1, "%" + search.getKeyword() + "%");
+				pstmt.setString(2, "%" + search.getKeyword() + "%");
+				break;
+			default:
+				pstmt.setString(1, "%" + search.getKeyword() + "%");
+				break;
+			}
+			
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {

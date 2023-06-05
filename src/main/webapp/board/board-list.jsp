@@ -129,7 +129,7 @@ li {
 			<c:choose>
 				<c:when test="${pagination.prevPage >= 1 }">
 					<li>
-						<a href="board-list.do?page=${pagination.prevPage}">
+						<a href="board-list.do?page=${pagination.prevPage}&search_option=${search.category}&keyword=${search.keyword}">
 							◀️
 						</a>
 					</li>
@@ -144,7 +144,7 @@ li {
 					</c:when>
 					<c:when test="${pagination.page ne i}">
 						<li>
-							<a href="board-list.do?page=${i}">${i}</a>
+							<a href="board-list.do?page=${i}&search_option=${search.category}&keyword=${search.keyword}">${i}</a>
 						</li>
 					</c:when>
 				</c:choose>
@@ -152,7 +152,7 @@ li {
 			 <c:choose>
 				<c:when test="${ pagination.nextPage <= pagination.lastPage }">
 					<li>
-						<a href="board-list.do?page=${pagination.nextPage}">▶</a>
+						<a href="board-list.do?page=${pagination.nextPage}&search_option=${search.category}&keyword=${search.keyword}">▶</a>
 					</li>
 				</c:when>
 			</c:choose> 
