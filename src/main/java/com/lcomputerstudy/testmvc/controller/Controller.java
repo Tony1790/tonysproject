@@ -123,9 +123,13 @@ public class Controller extends HttpServlet {
 				}
 				user = new User();
 				//error!!!!!
-				user.setU_idx(Integer.parseInt(request.getParameter("u_idx")));
-				user.setU_auth(Integer.parseInt(request.getParameter("u_auth")));
-				
+				if(request.getParameter("u_idx") == null){
+					user.setU_idx(1);
+					user.setU_auth(0);
+				} else {
+					user.setU_idx(Integer.parseInt(request.getParameter("u_idx")));
+					user.setU_auth(Integer.parseInt(request.getParameter("u_auth")));
+				}
 				userService = UserService.getInstance();
 				
 				count = userService.getUsersCount();
