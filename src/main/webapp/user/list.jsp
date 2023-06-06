@@ -67,24 +67,23 @@
 				<th>이름</th>
 				<th>회원등급</th>
 			</tr>
-			<c:forEach items="${list}" var="item" varStatus="status">
-				<tr>
+			<c:forEach items="${list}" var="item" varStatus="status" >
+				<tr class="user_list_membership_grade_table">
 					<td><a href="/tonysproject/user-detail.do?u_idx=${item.u_idx}">${item.u_idx}</a></td>
 					<td>${item.u_id}</td>
 					<td>${item.u_name}</td>
 					<td>
-						<form action="user-list.do" method="POST">
-							<input type="hidden" value="${item.u_idx}"></input>
-							<input type="hidden" value="${item.u_auth}"></input>
-							<button type="submit" class="change_membership_grade_btn">${item.u_auth}
-							</button>
-						</form>
+						<button 
+							type="submit" 
+							class="change_membership_grade_btn" 
+							u_idx = "${item.u_idx}"
+							u_auth = "${item.u_auth}"
+							>
+						</button>						
 					</td>
-					
 				</tr>
 			</c:forEach>
 		</table>
-		
 		<div>
 			<ul>
 				<c:choose>
@@ -121,7 +120,57 @@
 		</div>
 </body>
 <script>
-	//$(document).(queryselector)
+	$(document).ready(function() {
+		  $('.change_membership_grade_btn').each(function() {
+		    var uAuth = $(this).attr('u_auth');
+		    if (uAuth == 0) {
+		      $(this).text("관리자");
+		    } else {
+		      $(this).text("일반회원");
+		    }
+		  });
+	});
+	
+	
+	 $(document).on('click', '.change_membership_grade_btn', function() {
+	   var uIdx = $(this).attr('u_idx');
+	   var uAuth = $(this).attr('u_auth');
+	   var clickedButton = $(this);
+	   console.log($(this));
+	   
+	   $.ajax({
+	     method: 'POST',
+	     url: "user-membership-change.do",
+	     data: {
+	       u_idx: uIdx,
+	       u_auth: uAuth
+	     }
+	   })
+	   .done(function(msg) {
+		   //msg는 Jquery AJAX 객체인데 어떻게 바꿀 수 있나?
+				   
+				   
+				   
+	   		/* var uAuthFromMsg = $(msg).attr('u_auth');
+	   		console.log(uAuthFromMsg);
+	   		
+	   		let modifiedMsg = $(msg).text("1");
+		   	if(uAuthFromMsg == 0) {
+		   		modifiedMsg = $(msg).text("관리자");
+	   		} else {
+	   			modifiedMsg = $(msg).text("일반회원");
+	   		}
+	   		 */
+		   	$(".user_list_membership_grade_table").html(msg);
+	   		/* console.log($(this));
+	   		if (uAuthFromMsg == 0) {
+	   	      clickedButton.text("관리자");
+	   	    } else {
+	   	      clickedButton.text("일반회원");
+	   	    } */
+	   });
+	 });
+	
 </script>
 </html>
 

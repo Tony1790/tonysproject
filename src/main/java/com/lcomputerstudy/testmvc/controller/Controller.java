@@ -121,19 +121,16 @@ public class Controller extends HttpServlet {
 				if(reqPage != null) {
 					page = Integer.parseInt(reqPage);
 				}
-				user = new User();
-				//error!!!!!
-				if(request.getParameter("u_idx") == null){
-					user.setU_idx(1);
-					user.setU_auth(0);
-				} else {
-					user.setU_idx(Integer.parseInt(request.getParameter("u_idx")));
-					user.setU_auth(Integer.parseInt(request.getParameter("u_auth")));
-				}
+				/*
+				 * user = new User(); if(request.getParameter("u_idx") == null){
+				 * user.setU_idx(1); user.setU_auth(0); } else {
+				 * user.setU_idx(Integer.parseInt(request.getParameter("u_idx")));
+				 * user.setU_auth(Integer.parseInt(request.getParameter("u_auth"))); }
+				 * userService.changeMembership(user);
+				 */
 				userService = UserService.getInstance();
 				
 				count = userService.getUsersCount();
-				userService.changeMembership(user);
 				pagination = new Pagination();
 				pagination.setPage(page);
 				pagination.setCount(count);
@@ -143,16 +140,26 @@ public class Controller extends HttpServlet {
 				request.setAttribute("list", list);
 				request.setAttribute("pagination", pagination);
 				break;
-			/*
+			
 			case "/user-membership-change.do":
-			user = new User();
-			user.setU_idx(Integer.parseInt(request.getParameter("u_idx")));
-			user.setU_auth(Integer.parseInt(request.getParameter("u_auth")));
-			userService = UserService.getInstance();
-			userService.changeMembership(user);
-			isRedirected = true;
-			view = "user-list.do";
-			break;*/
+				user = new User();
+				
+				if(request.getParameter("u_idx") == null){
+					user.setU_idx(1);
+					user.setU_auth(0);
+				} else {
+					user.setU_idx(Integer.parseInt(request.getParameter("u_idx")));
+					user.setU_auth(Integer.parseInt(request.getParameter("u_auth")));
+				}
+				
+				userService = UserService.getInstance();
+				userService.changeMembership(user);
+				
+				user = userService.getUser(user);
+				
+				request.setAttribute("item", user);
+				view = "user/user_list_membership_grade_table";
+				break;
 				
 			case "/board-list.do":
 				reqPage = request.getParameter("page");
