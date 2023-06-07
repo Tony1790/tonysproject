@@ -6,7 +6,7 @@ public class User {
 	private String u_pw;
 	private String u_name;
 	private String u_tel;
-	private String u_age;
+	private int u_age;
 	private int u_auth;
 	
 	public int getU_auth() {
@@ -45,10 +45,10 @@ public class User {
 	public void setU_tel(String u_tel) {
 		this.u_tel = u_tel;
 	}
-	public String getU_age() {
+	public int getU_age() {
 		return u_age;
 	}
-	public void setU_age(String u_age) {
+	public void setU_age(int u_age) {
 		this.u_age = u_age;
 	}
 

@@ -121,9 +121,7 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 		<tr>
 			<td class="author">작성자 : ${board.b_writer}</td>
 			<td>조회수 : ${board.b_view}</td>
-			<!-- 조회수 채워야함 -->
 			<td>댓글수 :</td>
-			<!-- 댓글 수도 채워야함 -->
 		</tr>
 
 
@@ -132,10 +130,10 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 		</tr>
 
 		<tr style="height:50px;">
-			<td style="border:none;">
+			<td class="edit-td-btn" u_auth="${user.u_auth}" u_idx="${user.u_idx}" b_udx = "${board.u_idx}" b_idx="${board.b_idx}" style="border:none;">
 				<a class="edit-btn" href="/tonysproject/board-edit.do?b_idx=${board.b_idx}" style="width:70%;font-weight:700;background-color:#818181;color:#fff;" >수정</a>
 			</td>
-			<td style="border:none;">
+			<td class="delete-td-btn" u_auth="${user.u_auth}" u_idx="${user.u_idx}" b_udx = "${board.u_idx}" bIdx="${board.b_idx}" style="border:none;">
 				<a class="delete-btn" href="/tonysproject/board-delete.do?b_idx=${board.b_idx}" style="width:70%;font-weight:700;background-color:red;color:#fff;" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
 			</td>
 			<td style="border:none;">
@@ -205,7 +203,32 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 		</form>
 	</div>
 	<script>
-		
+		$(document).ready(function(){
+			var UAuth = $('.delete-td-btn').attr("u_auth");
+			var uIdx = $('.delete-td-btn').attr("u_idx");
+			var buIdx = $('.delete-td-btn').attr("b_udx");
+			
+			if(UAuth == 0) {
+				$('.edit-td-btn').css('display', 'none');
+			} else if(uAuth !== 0 && uIdx !== buIdx) {
+				$('.edit-td-btn').css('display', 'none');
+				$('.delete-td-btn').css('display', 'none');
+			}
+		});
+	
+		/* let bIdx = $(.edit-td-btn).attr("b_idx");
+		$.ajax({
+			url: "board-detail.do",
+			method : "GET",
+			data : {
+				b_idx : bIdx;
+			},
+			
+			success: function(response) {
+				console.log(response);
+			}
+		}); */
+	
 		$(document).on('click', '.btnReCommentForm', function () {
 			
 			$(this).closest('li').next('li').css('display', 'block');

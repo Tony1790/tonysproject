@@ -219,6 +219,7 @@ public class BoardDAO {
 				board.setB_group(rs.getInt("b_group"));
 				board.setB_order(rs.getInt("b_order"));
 				board.setB_depth(rs.getInt("b_depth"));
+				board.setU_idx(rs.getInt("u_idx"));
 				
 				//조회수 증가 DB에 업데이트
 				String updateQuery = "update board set b_view = ? where b_idx=?";

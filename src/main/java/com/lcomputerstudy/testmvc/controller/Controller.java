@@ -74,7 +74,7 @@ public class Controller extends HttpServlet {
 				user.setU_pw(request.getParameter("password"));
 				user.setU_name(request.getParameter("name"));
 				user.setU_tel(request.getParameter("tel1") + "-" + request.getParameter("tel2") + "-" + request.getParameter("tel3"));
-				user.setU_age(request.getParameter("age"));
+				user.setU_age(Integer.parseInt(request.getParameter("u_age")));
 				userService = UserService.getInstance();
 				userService.insertUser(user);
 				view = "user/insert-result";
@@ -102,7 +102,7 @@ public class Controller extends HttpServlet {
 				user.setU_pw(request.getParameter("edit_password"));
 				user.setU_name(request.getParameter("edit_name"));
 				user.setU_tel(request.getParameter("edit_tel1") + "-" + request.getParameter("edit_tel2") + "-" + request.getParameter("edit_tel3"));
-				user.setU_age(request.getParameter("edit_age"));
+				user.setU_age(Integer.parseInt(request.getParameter("u_age")));
 				userService = UserService.getInstance();
 				userService.editUser(user);
 				view = "user/edit-result";
@@ -121,13 +121,6 @@ public class Controller extends HttpServlet {
 				if(reqPage != null) {
 					page = Integer.parseInt(reqPage);
 				}
-				/*
-				 * user = new User(); if(request.getParameter("u_idx") == null){
-				 * user.setU_idx(1); user.setU_auth(0); } else {
-				 * user.setU_idx(Integer.parseInt(request.getParameter("u_idx")));
-				 * user.setU_auth(Integer.parseInt(request.getParameter("u_auth"))); }
-				 * userService.changeMembership(user);
-				 */
 				userService = UserService.getInstance();
 				
 				count = userService.getUsersCount();
@@ -143,7 +136,6 @@ public class Controller extends HttpServlet {
 			
 			case "/user-membership-change.do":
 				user = new User();
-				
 				if(request.getParameter("u_idx") == null){
 					user.setU_idx(1);
 					user.setU_auth(0);
@@ -151,13 +143,22 @@ public class Controller extends HttpServlet {
 					user.setU_idx(Integer.parseInt(request.getParameter("u_idx")));
 					user.setU_auth(Integer.parseInt(request.getParameter("u_auth")));
 				}
-				
 				userService = UserService.getInstance();
 				userService.changeMembership(user);
 				
-				user = userService.getUser(user);
+				reqPage = request.getParameter("page");
+				if(reqPage != null) {
+					page = Integer.parseInt(reqPage);
+				}
+				count = userService.getUsersCount();
+				pagination = new Pagination();
+				pagination.setPage(page);
+				pagination.setCount(count);
+				pagination.init();
+				list = userService.getUsers(pagination);
 				
-				request.setAttribute("item", user);
+				request.setAttribute("list", list);
+				
 				view = "user/user_list_membership_grade_table";
 				break;
 				
@@ -187,6 +188,8 @@ public class Controller extends HttpServlet {
 				break;
 				
 			case "/board-detail.do":
+				session = request.getSession();
+				user = (User)session.getAttribute("user");
 				board = new Board();
 				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
 				boardService = BoardService.getInstance();
@@ -197,6 +200,7 @@ public class Controller extends HttpServlet {
 				ArrayList<Comment> commentList = commentService.getComments(bIdx);
 				
 				view = "board/board-detail";
+				request.setAttribute("user", user);
 				request.setAttribute("board", board);
 				request.setAttribute("commentList", commentList);
 				break;
@@ -395,6 +399,8 @@ public class Controller extends HttpServlet {
 				"/user-edit.do",
 				"/user-edit-process.do",
 				"/user-logout.do",
+				"/board-detail.do",
+				"/board-delete.do",
 				"/board-create.do",
 				"/board-create-process.do",
 				"/reboard-create.do",

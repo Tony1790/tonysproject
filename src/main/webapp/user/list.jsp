@@ -57,7 +57,7 @@
 	<h2>회원 목록</h2>
 	<a class="newJoin" href="user-insert.do"><h3>회원 가입</h3></a>
 	<a href="board-list.do">게시글 목록</a>
-		<table>
+		<table class="user_list_membership_grade_table">
 			<tr>
 				<td colspan="4">전체 회원 수 : ${pagination.count}</td>
 			</tr>	
@@ -68,18 +68,13 @@
 				<th>회원등급</th>
 			</tr>
 			<c:forEach items="${list}" var="item" varStatus="status" >
-				<tr class="user_list_membership_grade_table">
+				<tr >
 					<td><a href="/tonysproject/user-detail.do?u_idx=${item.u_idx}">${item.u_idx}</a></td>
 					<td>${item.u_id}</td>
 					<td>${item.u_name}</td>
-					<td>
-						<button 
-							type="submit" 
-							class="change_membership_grade_btn" 
-							u_idx = "${item.u_idx}"
-							u_auth = "${item.u_auth}"
-							>
-						</button>						
+					<td >
+						<button type="submit" class="change_membership_grade_btn"
+								u_idx="${item.u_idx}" u_auth="${item.u_auth}">관리자</button>
 					</td>
 				</tr>
 			</c:forEach>
@@ -135,8 +130,6 @@
 	 $(document).on('click', '.change_membership_grade_btn', function() {
 	   var uIdx = $(this).attr('u_idx');
 	   var uAuth = $(this).attr('u_auth');
-	   var clickedButton = $(this);
-	   console.log($(this));
 	   
 	   $.ajax({
 	     method: 'POST',
@@ -146,30 +139,24 @@
 	       u_auth: uAuth
 	     }
 	   })
-	   .done(function(msg) {
-		   //msg는 Jquery AJAX 객체인데 어떻게 바꿀 수 있나?
-				   
-				   
-				   
-	   		/* var uAuthFromMsg = $(msg).attr('u_auth');
-	   		console.log(uAuthFromMsg);
-	   		
-	   		let modifiedMsg = $(msg).text("1");
-		   	if(uAuthFromMsg == 0) {
-		   		modifiedMsg = $(msg).text("관리자");
-	   		} else {
-	   			modifiedMsg = $(msg).text("일반회원");
-	   		}
-	   		 */
-		   	$(".user_list_membership_grade_table").html(msg);
-	   		/* console.log($(this));
-	   		if (uAuthFromMsg == 0) {
-	   	      clickedButton.text("관리자");
-	   	    } else {
-	   	      clickedButton.text("일반회원");
-	   	    } */
-	   });
-	 });
+	   .done(
+			function(msg) {
+				$(".user_list_membership_grade_table").html(msg);
+			}
+			   
+			   /* (msg, clickedButton) => {
+				   console.log($(this));
+				   var uAuthFromMsg = $(this).attr('u_auth');
+				   console.log(uAuthFromMsg);
+				   if(uAuthFromMsg == 0) {
+					   $(this).text("관리자");
+				   }else {
+					   $(this).text("일반회원");
+				   }
+				   $(".user_list_membership_grade_table").html($(this));
+			   } */
+	   );
+	  });
 	
 </script>
 </html>
