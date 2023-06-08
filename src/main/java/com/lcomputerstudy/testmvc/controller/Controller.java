@@ -1,11 +1,15 @@
 package com.lcomputerstudy.testmvc.controller;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
 import java.io.IOException;
-import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Map;
+import java.sql.Timestamp;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,7 +18,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.sql.Timestamp;
 
 import com.lcomputerstudy.testmvc.service.BoardService;
 import com.lcomputerstudy.testmvc.service.UserService;
@@ -37,6 +40,7 @@ public class Controller extends HttpServlet {
 		
 		int count = 0;
 		int page = 1;
+		Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
 		
 		response.setContentType("text/html; charset=utf-8");
 		request.setCharacterEncoding("utf-8");
@@ -47,8 +51,12 @@ public class Controller extends HttpServlet {
 		String view = null;
 		String idx = null;
 		String pw = null;
+		// 파일을 저장할 디렉토리 경로
+		String uploadPath = "/tonysproject/src/main/webapp/img";
 		
-		Timestamp currentDateTime = new Timestamp(System.currentTimeMillis());
+		// 파일 업로드를 처리하기 위한 Apache Commons FileUpload 설정
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        ServletFileUpload fileUpload = new ServletFileUpload(factory);
 		
 		Pagination pagination = null;
 		HttpSession session = null;
@@ -62,6 +70,32 @@ public class Controller extends HttpServlet {
 		Comment comment = null;
 		Search search = null;
 		boolean isRedirected = false;
+		
+		/* 일단 임시로 주석처리
+		 * 		try {
+		    // HTTP 요청에서 파일 업로드 파라미터를 가져옴
+		    List<FileItem> items = fileUpload.parseRequest(request);
+		    
+		    // 파일 업로드 파라미터를 순회하며 처리
+		    for (FileItem item : items) {
+		        if (!item.isFormField()) { // 파일 파라미터인 경우
+		            String fileName = item.getName(); // 업로드된 파일명
+		            String filePath = uploadPath + File.separator + fileName; // 저장될 파일 경로
+		
+		            // 파일을 지정된 경로에 저장
+		            item.write(new File(filePath));
+		
+		            // 파일 업로드 후 처리할 코드 작성
+		            // ...
+		        }
+		    }
+		
+		    // 파일 업로드 완료 후 리다이렉트 또는 응답 생성
+		    response.sendRedirect("upload-success.jsp");
+		} catch (Exception e) {
+		    e.printStackTrace();
+		    response.sendRedirect("upload-error.jsp");
+		}*/
 		
 		switch (command) {
 			
