@@ -128,19 +128,39 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 		<tr>
 			<td class="content">내용 : ${board.b_content}</td>
 		</tr>
-
-		<tr style="height:50px;">
-			<td class="edit-td-btn" u_auth="${user.u_auth}" u_idx="${user.u_idx}" b_udx = "${board.u_idx}" b_idx="${board.b_idx}" style="border:none;">
-				<a class="edit-btn" href="/tonysproject/board-edit.do?b_idx=${board.b_idx}" style="width:70%;font-weight:700;background-color:#818181;color:#fff;" >수정</a>
-			</td>
-			<td class="delete-td-btn" u_auth="${user.u_auth}" u_idx="${user.u_idx}" b_udx = "${board.u_idx}" bIdx="${board.b_idx}" style="border:none;">
-				<a class="delete-btn" href="/tonysproject/board-delete.do?b_idx=${board.b_idx}" style="width:70%;font-weight:700;background-color:red;color:#fff;" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
-			</td>
-			<td style="border:none;">
-				<a class="re_content_btn" href="/tonysproject/reboard-create.do?b_idx=${board.b_idx}&b_group=${board.b_group}&b_depth=${board.b_depth}&b_order=${board.b_order}" style="width:70%;font-weight:700;background-color:#333;color:#fff;">답글</a>
-				
-			</td>
-		</tr>
+		
+		<c:choose>
+			<c:when test="${board.u_idx eq sessionScope.user.u_idx}">
+				<tr style="height:50px;">
+					<td class="edit-td-btn" u_auth="${user.u_auth}" u_idx="${user.u_idx}" b_udx = "${board.u_idx}" b_idx="${board.b_idx}" style="border:none;">
+						<a class="edit-btn" href="/tonysproject/board-edit.do?b_idx=${board.b_idx}" style="width:70%;font-weight:700;background-color:#818181;color:#fff;" >수정</a>
+					</td>
+					<td class="delete-td-btn" u_auth="${user.u_auth}" u_idx="${user.u_idx}" b_udx = "${board.u_idx}" bIdx="${board.b_idx}" style="border:none;">
+						<a class="delete-btn" href="/tonysproject/board-delete.do?b_idx=${board.b_idx}" style="width:70%;font-weight:700;background-color:red;color:#fff;" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
+					</td>
+					<td style="border:none;">
+						<a class="re_content_btn" href="/tonysproject/reboard-create.do?b_idx=${board.b_idx}&b_group=${board.b_group}&b_depth=${board.b_depth}&b_order=${board.b_order}" style="width:70%;font-weight:700;background-color:#333;color:#fff;">답글</a>
+					</td>
+				</tr>					
+			</c:when>
+			<c:when test="${(board.u_idx != sessionScope.user.u_idx) && (sessionScope.user.u_auth eq 0)}">
+				<tr style="height:50px;">
+					<td class="delete-td-btn" u_auth="${user.u_auth}" u_idx="${user.u_idx}" b_udx = "${board.u_idx}" bIdx="${board.b_idx}" style="border:none;">
+						<a class="delete-btn" href="/tonysproject/board-delete.do?b_idx=${board.b_idx}" style="width:70%;font-weight:700;background-color:red;color:#fff;" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
+					</td>
+					<td style="border:none;">
+						<a class="re_content_btn" href="/tonysproject/reboard-create.do?b_idx=${board.b_idx}&b_group=${board.b_group}&b_depth=${board.b_depth}&b_order=${board.b_order}" style="width:70%;font-weight:700;background-color:#333;color:#fff;">답글</a>
+					</td>
+				</tr>
+			</c:when>
+			<c:otherwise>
+				<tr style="height:50px;">	
+					<td style="border:none;">
+						<a class="re_content_btn" href="/tonysproject/reboard-create.do?b_idx=${board.b_idx}&b_group=${board.b_group}&b_depth=${board.b_depth}&b_order=${board.b_order}" style="width:70%;font-weight:700;background-color:#333;color:#fff;">답글</a>
+					</td>
+				</tr>					
+			</c:otherwise>
+		</c:choose>
 	</table>	
 		
 	<div class="cmt-container">
@@ -203,7 +223,7 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 		</form>
 	</div>
 	<script>
-		$(document).ready(function(){
+		/* $(document).ready(function(){
 			var UAuth = $('.delete-td-btn').attr("u_auth");
 			var uIdx = $('.delete-td-btn').attr("u_idx");
 			var buIdx = $('.delete-td-btn').attr("b_udx");
@@ -214,7 +234,7 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 				$('.edit-td-btn').css('display', 'none');
 				$('.delete-td-btn').css('display', 'none');
 			}
-		});
+		}); */
 	
 		/* let bIdx = $(.edit-td-btn).attr("b_idx");
 		$.ajax({
@@ -306,8 +326,6 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 			})
 		    .done(function( msg ) {
 		    	$('.cmt-list').html(msg);
-		      //alert( "Data Saved: " + msg );
-		      //console.log(msg);
 		    });
 		});
 		

@@ -51,6 +51,11 @@ public class User {
 	public void setU_age(int u_age) {
 		this.u_age = u_age;
 	}
+	@Override
+	public String toString() {
+		return "User [u_idx=" + u_idx + ", u_id=" + u_id + ", u_pw=" + u_pw + ", u_name=" + u_name + ", u_tel=" + u_tel
+				+ ", u_age=" + u_age + ", u_auth=" + u_auth + "]";
+	}
 
 	
 }

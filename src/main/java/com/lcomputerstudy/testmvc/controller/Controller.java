@@ -205,19 +205,38 @@ public class Controller extends HttpServlet {
 				request.setAttribute("commentList", commentList);
 				break;
 			case "/board-delete.do":
-				board = new Board();
-				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
-				boardService = BoardService.getInstance();
-				boardService.deleteBoard(board);
-				view = "board/board-delete";
-				break;
-			case "/board-edit.do":
+				session = request.getSession();
+				user = (User)session.getAttribute("user");
 				board = new Board();
 				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
 				boardService = BoardService.getInstance();
 				board = boardService.getBoard(board);
-				view = "board/board-edit";
-				request.setAttribute("board", board);
+				//작성자가 아니면서 동시에 관리자도 아닐때
+				if(!((board.getU_idx() == user.getU_idx()) || (user.getU_auth() == 0) )) {
+					isRedirected = true;
+					view = "user-list.do";
+				} else {
+					isRedirected = false;
+					boardService.deleteBoard(board);
+					view = "board/board-delete";
+				}
+				
+				break;
+			case "/board-edit.do":
+				session = request.getSession();
+				user = (User)session.getAttribute("user");
+				board = new Board();
+				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
+				boardService = BoardService.getInstance();
+				board = boardService.getBoard(board);
+				if(user.getU_idx() != board.getU_idx()) {
+					isRedirected = true;
+					view = "user-list.do";
+				} else {
+					isRedirected = false;
+					view = "board/board-edit";
+					request.setAttribute("board", board);
+				}
 				break;
 			case "/board-edit-process.do":
 				board = new Board();
