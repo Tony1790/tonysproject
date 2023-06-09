@@ -128,6 +128,11 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 		<tr>
 			<td class="content">내용 : ${board.b_content}</td>
 		</tr>
+		<tr>
+		   	<td>
+		    	<img src="${pageContext.request.contextPath}${board.b_img}" width="300"></img>
+		    </td>
+		</tr>
 		
 		<c:choose>
 			<c:when test="${board.u_idx eq sessionScope.user.u_idx}">

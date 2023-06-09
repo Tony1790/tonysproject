@@ -13,7 +13,14 @@ public class Board {
 	private int b_group;
 	private int b_order;
 	private int b_depth;
+	private String b_img;
 	
+	public String getB_img() {
+		return b_img;
+	}
+	public void setB_img(String b_img) {
+		this.b_img = b_img;
+	}
 	public int getB_group() {
 		return b_group;
 	}

@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -32,6 +33,9 @@ import com.lcomputerstudy.testmvc.vo.Comment;
 public class Controller extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
+	// 파일이 업로드될 디렉토리를 지정합니다.
+    private static final String UPLOAD_DIRECTORY = "C:\\Users\\wnfnw\\git\\tonysproject\\src\\main\\webapp\\img";
+	
 	protected void doGet(HttpServletRequest request,  HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
 	}
@@ -51,12 +55,6 @@ public class Controller extends HttpServlet {
 		String view = null;
 		String idx = null;
 		String pw = null;
-		// 파일을 저장할 디렉토리 경로
-		String uploadPath = "/tonysproject/src/main/webapp/img";
-		
-		// 파일 업로드를 처리하기 위한 Apache Commons FileUpload 설정
-        DiskFileItemFactory factory = new DiskFileItemFactory();
-        ServletFileUpload fileUpload = new ServletFileUpload(factory);
 		
 		Pagination pagination = null;
 		HttpSession session = null;
@@ -71,31 +69,7 @@ public class Controller extends HttpServlet {
 		Search search = null;
 		boolean isRedirected = false;
 		
-		/* 일단 임시로 주석처리
-		 * 		try {
-		    // HTTP 요청에서 파일 업로드 파라미터를 가져옴
-		    List<FileItem> items = fileUpload.parseRequest(request);
-		    
-		    // 파일 업로드 파라미터를 순회하며 처리
-		    for (FileItem item : items) {
-		        if (!item.isFormField()) { // 파일 파라미터인 경우
-		            String fileName = item.getName(); // 업로드된 파일명
-		            String filePath = uploadPath + File.separator + fileName; // 저장될 파일 경로
 		
-		            // 파일을 지정된 경로에 저장
-		            item.write(new File(filePath));
-		
-		            // 파일 업로드 후 처리할 코드 작성
-		            // ...
-		        }
-		    }
-		
-		    // 파일 업로드 완료 후 리다이렉트 또는 응답 생성
-		    response.sendRedirect("upload-success.jsp");
-		} catch (Exception e) {
-		    e.printStackTrace();
-		    response.sendRedirect("upload-error.jsp");
-		}*/
 		
 		switch (command) {
 			
@@ -192,6 +166,7 @@ public class Controller extends HttpServlet {
 				list = userService.getUsers(pagination);
 				
 				request.setAttribute("list", list);
+				request.setAttribute("pagination", pagination);
 				
 				view = "user/user_list_membership_grade_table";
 				break;
@@ -282,6 +257,7 @@ public class Controller extends HttpServlet {
 				boardService.editBoard(board);
 				view = "/board/board-edit-result";
 				break;
+			
 			case "/board-create.do":
 				view = "board/board-create";
 				break;
@@ -289,14 +265,54 @@ public class Controller extends HttpServlet {
 				board = new Board();
 				session = request.getSession();
 				user = (User)session.getAttribute("user");
-				//board.setU_idx(Integer.parseInt((String) session.getAttribute(idx)));
-				//board.setU_idx(Integer.parseInt(request.getParameter("u_idx")));
 				board.setU_idx(user.getU_idx());
-				board.setB_title(request.getParameter("title"));
-				board.setB_content(request.getParameter("content"));
-				board.setB_date(currentDateTime);
-				boardService = BoardService.getInstance();
-				boardService.createBoard(board);
+				// 요청이 멀티파트 컨텐츠인지 (즉, 파일을 포함하고 있는지) 확인
+				if(ServletFileUpload.isMultipartContent(request)) {
+					try {
+						// 요청을 파싱하여 파일 아이템의 리스트를 얻습니다.
+						List<FileItem> multiparts = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
+						
+						for(FileItem item : multiparts) {
+							// 아이템이 폼 필드가 아니라면 (즉, 파일이라면)
+							if(!item.isFormField()) {
+								// 원본파일의 이름을 얻고,
+								String originalFilename = item.getName(); 
+								// 확장자 추출
+								String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+								//랜덤한 이름과 확장자를 합침.
+								String name = UUID.randomUUID().toString() + extension;
+								//파일URL 생성.
+								String fileUrl = UPLOAD_DIRECTORY + File.separator + name;
+								// 해당 파일을 지정된 디렉토리에 저장합니다.
+		                        item.write(new File(fileUrl));
+		                        //board에 이미지파일의 이름과 폴더명을 저장합니다.
+		                        String bImg = "/img" + "/" + name;
+		                        board.setB_img(bImg);
+							} else if (item.isFormField()) {
+								//아이템이 폼필드라면
+								String fieldName = item.getFieldName();
+								String fieldValue = item.getString();
+								
+								if(fieldName.equals("title")) {
+									board.setB_title(fieldValue);
+								} else if(fieldName.equals("content")) {
+									board.setB_content(fieldValue);
+								}
+							}
+						}
+						
+						board.setB_date(currentDateTime);
+						boardService = BoardService.getInstance();
+						boardService.createBoard(board);
+						
+					} catch (Exception ex) {
+		                ex.printStackTrace();
+		            }
+				} else {
+					System.out.println("fail!");
+					// 요청이 파일 업로드를 위한 것이 아니라면 에러 메시지를 설정합니다.
+		            //request.setAttribute("message", "Sorry this Servlet only handles file upload request");
+				}
 				
 				view = "board/board-create-result";
 				break;

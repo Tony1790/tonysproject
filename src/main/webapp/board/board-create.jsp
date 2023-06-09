@@ -16,11 +16,11 @@
 </style>
 <body>
 	<h2>게시글 작성</h2>
-	<form action="/tonysproject/board-create-process.do" name="board" method="POST">
-		<input type="hidden" name="u_idx" value="${user.u_idx}">
-		
+	<form action="/tonysproject/board-create-process.do" name="board" method="POST" enctype="multipart/form-data">
 		<p class="title"> 제목 : <input type="text" name="title" maxlength="20"></p>
 		<textarea class="content" name="content" placeholder="내용 : "></textarea>
+		
+    	<input type="file" name="file1" />
 		
 		<p><input type="submit" value="작성"/></p>
 	</form>

@@ -72,7 +72,7 @@ public class BoardDAO {
 		try {
 			conn = DBConnection.getConnection();
 			
-			String query2 = "insert into board (b_title, b_content, b_writer, b_date, u_idx, b_view, b_group, b_order, b_depth) values (?,?,(select u_id from user where u_idx=?),?,?,?,0,1,0)";
+			String query2 = "insert into board (b_title, b_content, b_writer, b_date, u_idx, b_view, b_group, b_order, b_depth, b_img) values (?,?,(select u_id from user where u_idx=?),?,?,?,0,1,0,?)";
 			pstmt = conn.prepareStatement(query2);
 			pstmt.setString(1, board.getB_title());
 			pstmt.setString(2, board.getB_content());
@@ -80,6 +80,7 @@ public class BoardDAO {
 			pstmt.setTimestamp(4, board.getB_date());
 			pstmt.setInt(5, board.getU_idx());
 			pstmt.setInt(6, 0);
+			pstmt.setString(7, board.getB_img());
 			pstmt.executeUpdate();
 			pstmt.close();
 			
@@ -220,6 +221,7 @@ public class BoardDAO {
 				board.setB_order(rs.getInt("b_order"));
 				board.setB_depth(rs.getInt("b_depth"));
 				board.setU_idx(rs.getInt("u_idx"));
+				board.setB_img(rs.getString("b_img"));
 				
 				//조회수 증가 DB에 업데이트
 				String updateQuery = "update board set b_view = ? where b_idx=?";
