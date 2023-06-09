@@ -316,10 +316,6 @@ public class Controller extends HttpServlet {
 				
 				view = "board/board-create-result";
 				break;
-				
-				
-				
-			
 			
 			case "/reboard-create.do":
 				board = new Board();
