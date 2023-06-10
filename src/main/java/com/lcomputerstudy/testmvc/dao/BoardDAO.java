@@ -39,8 +39,8 @@ public class BoardDAO {
 		try {
 			conn = DBConnection.getConnection();
 			
-			String query = "insert into board (b_title, b_content, b_writer, b_date, u_idx, b_view, b_group, b_order, b_depth) "
-					+ "values (?,?,(select u_id from user where u_idx=?),?,?,?,?,?,?)";
+			String query = "insert into board (b_title, b_content, b_writer, b_date, u_idx, b_view, b_group, b_order, b_depth, b_img) "
+					+ "values (?,?,(select u_id from user where u_idx=?),?,?,?,?,?,?,?)";
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, " └" + board.getB_title());
 			pstmt.setString(2, board.getB_content());
@@ -51,6 +51,7 @@ public class BoardDAO {
 			pstmt.setInt(7, board.getB_group());
 			pstmt.setInt(8, board.getB_order());
 			pstmt.setInt(9, board.getB_depth());
+			pstmt.setString(10, board.getB_img());
 			pstmt.executeUpdate();
 			pstmt.close();
 			
@@ -249,15 +250,18 @@ public class BoardDAO {
 	public void editBoard(Board board) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		
+		if(board.getB_img() == null) {
+			board.setB_img("/");
+		}
 		try {
 			conn = DBConnection.getConnection();
 			
-			String sql = "update board set b_title=?, b_content=? where b_idx=?";
+			String sql = "update board set b_title=?, b_content=?, b_img = ? where b_idx=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, board.getB_title());
 			pstmt.setString(2, board.getB_content());
-			pstmt.setInt(3, board.getB_idx());
+			pstmt.setString(3, board.getB_img());
+			pstmt.setInt(4, board.getB_idx());
 			pstmt.executeUpdate();
 			
 		} catch(Exception e) {

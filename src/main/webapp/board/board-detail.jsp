@@ -115,11 +115,11 @@ a.edit-btn:hover, a.delete-btn:hover, a.re_content_btn {
 	<h1>게시글 상세페이지</h1>
 	<table class="container">
 		<tr>
-			<td class="title">제목 : ${board.b_title}</td>
+			<td colspan="2" class="title">제목 : ${board.b_title}</td>
 			<td class="view">작성일자 : ${board.b_date}</td>
 		</tr>
 		<tr>
-			<td class="author">작성자 : ${board.b_writer}</td>
+			<td colspan="2" class="author">작성자 : ${board.b_writer}</td>
 			<td>조회수 : ${board.b_view}</td>
 			<td>댓글수 :</td>
 		</tr>

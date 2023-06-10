@@ -16,8 +16,8 @@
 </style>
 <body>
 	<h2>답글 작성</h2>
-	<form action="/tonysproject/reboard-create-process.do" name="board" method="POST">
-		<input type="hidden" name="u_idx" value="${user.u_idx}">	
+	<form action="/tonysproject/reboard-create-process.do" name="board" method="POST" enctype="multipart/form-data">
+		<input type="hidden" name="u_idx" value="${user.u_idx}">
 		<input type="hidden" name="b_group" value="${board.b_group}">	
 		<input type="hidden" name="b_idx" value="${board.b_idx}">	
 		<input type="hidden" name="b_order" value="${board.b_order}">	
@@ -25,6 +25,8 @@
 		
 		<p class="title"> 제목 : <input name="title" type="text" maxlength="20"></p>
 		<textarea class="content" name="content" placeholder="내용 : "></textarea>
+		
+		<p><input type="file" name="file1"/></p>
 		
 		<p><input type="submit" value="작성"/></p>
 	</form>

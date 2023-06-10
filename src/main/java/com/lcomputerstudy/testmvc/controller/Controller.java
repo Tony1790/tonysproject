@@ -249,15 +249,52 @@ public class Controller extends HttpServlet {
 				break;
 			case "/board-edit-process.do":
 				board = new Board();
-				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
-				board.setB_title(request.getParameter("edit_title"));
-				board.setB_content(request.getParameter("edit_content"));
+				if(ServletFileUpload.isMultipartContent(request)) {
+					try {
+						// 요청을 파싱하여 파일 아이템의 리스트를 얻습니다.
+						List<FileItem> multiparts = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
+						
+						for(FileItem item : multiparts) {
+							// 아이템이 폼 필드가 아니라면 (즉, 파일이라면)
+							if(!item.isFormField()) {
+								// 원본파일의 이름을 얻고,
+								String originalFilename = item.getName(); 
+								// 확장자 추출
+								String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+								//랜덤한 이름과 확장자를 합침.
+								String name = UUID.randomUUID().toString() + extension;
+								//파일URL 생성.
+								String fileUrl = UPLOAD_DIRECTORY + File.separator + name;
+								// 해당 파일을 지정된 디렉토리에 저장합니다.
+		                        item.write(new File(fileUrl));
+		                        //board에 이미지파일의 이름과 폴더명을 저장합니다.
+		                        String bImg = "/img" + "/" + name;
+		                        board.setB_img(bImg);
+							} else if (item.isFormField()) {
+								//아이템이 폼필드라면
+								String fieldName = item.getFieldName();
+								String fieldValue = item.getString();
+								
+								if(fieldName.equals("edit_title")) {
+									board.setB_title(fieldValue);
+								} else if(fieldName.equals("edit_content")) {
+									board.setB_content(fieldValue);
+								} else if(fieldName.equals("b_idx")) {
+									board.setB_idx(Integer.parseInt(fieldValue));
+								}
+							}
+						}
+						boardService = BoardService.getInstance();
+						boardService.editBoard(board);
+					} catch (Exception ex) {
+		                ex.printStackTrace();
+		            }
+				} else {
+					System.out.println("fail!");
+				}
 				
-				boardService = BoardService.getInstance();
-				boardService.editBoard(board);
 				view = "/board/board-edit-result";
 				break;
-			
 			case "/board-create.do":
 				view = "board/board-create";
 				break;
@@ -297,7 +334,7 @@ public class Controller extends HttpServlet {
 									board.setB_title(fieldValue);
 								} else if(fieldName.equals("content")) {
 									board.setB_content(fieldValue);
-								}
+								} 
 							}
 						}
 						
@@ -326,22 +363,75 @@ public class Controller extends HttpServlet {
 				request.setAttribute("board", board);
 				break;
 			case "/reboard-create-process.do":
-				board = new Board();
 				session = request.getSession();
 				user = (User)session.getAttribute("user");
+				board = new Board();
 				board.setU_idx(user.getU_idx());
-				board.setB_title(request.getParameter("title"));
-				board.setB_content(request.getParameter("content"));
-				board.setB_group(Integer.parseInt(request.getParameter("b_group")));
-				board.setB_order(Integer.parseInt(request.getParameter("b_order")));
-				board.setB_depth(Integer.parseInt(request.getParameter("b_depth")));
-				board.setB_date(currentDateTime);
-				boardService = BoardService.getInstance();
-				boardService.createReboard(board);
+				// 요청이 멀티파트 컨텐츠인지 (즉, 파일을 포함하고 있는지) 확인
+				if(ServletFileUpload.isMultipartContent(request)) {
+					try {
+						// 요청을 파싱하여 파일 아이템의 리스트를 얻습니다.
+						List<FileItem> multiparts = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
+						
+						for(FileItem item : multiparts) {
+							// 아이템이 폼 필드가 아니라면 (즉, 파일이라면)
+							if(!item.isFormField()) {
+								// 원본파일의 이름을 얻고,
+								String originalFilename = item.getName(); 
+								// 확장자 추출
+								String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+								//랜덤한 이름과 확장자를 합침.
+								String name = UUID.randomUUID().toString() + extension;
+								//파일URL 생성.
+								String fileUrl = UPLOAD_DIRECTORY + File.separator + name;
+								// 해당 파일을 지정된 디렉토리에 저장합니다.
+		                        item.write(new File(fileUrl));
+		                        //board에 이미지파일의 이름과 폴더명을 저장합니다.
+		                        String bImg = "/img" + "/" + name;
+		                        board.setB_img(bImg);
+							} else if (item.isFormField()) {
+								//아이템이 폼필드라면
+								String fieldName = item.getFieldName();
+								String fieldValue = item.getString();
+								
+								if(fieldName.equals("title")) {
+									board.setB_title(fieldValue);
+								} else if(fieldName.equals("content")) {
+									board.setB_content(fieldValue);
+								} else if(fieldName.equals("b_group")) {
+									board.setB_group(Integer.parseInt(fieldValue));
+								} else if(fieldName.equals("b_idx")) {
+									board.setB_idx(Integer.parseInt(fieldValue));
+								} else if(fieldName.equals("b_order")) {
+									board.setB_order(Integer.parseInt(fieldValue));
+								} else if(fieldName.equals("b_depth")) {
+									board.setB_depth(Integer.parseInt(fieldValue));
+								} 
+							}
+						}
+						
+						board.setB_date(currentDateTime);
+						boardService = BoardService.getInstance();
+						boardService.createReboard(board);
+						
+					} catch (Exception ex) {
+		                ex.printStackTrace();
+		            }
+				} else {
+					System.out.println("fail!");
+				}
 				view = "board/reboard-create-result";
 				break;
-				
-				
+				/*
+				 * board.setB_title(request.getParameter("title"));
+				 * board.setB_content(request.getParameter("content"));
+				 * board.setB_group(Integer.parseInt(request.getParameter("b_group")));
+				 * board.setB_order(Integer.parseInt(request.getParameter("b_order")));
+				 * board.setB_depth(Integer.parseInt(request.getParameter("b_depth")));
+				 * board.setB_date(currentDateTime); boardService = BoardService.getInstance();
+				 * boardService.createReboard(board); view = "board/reboard-create-result";
+				 * break;
+				 */
 				
 			case "/comment-create-process.do":
 				comment = new Comment();
