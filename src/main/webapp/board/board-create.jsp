@@ -20,7 +20,7 @@
 		<p class="title"> 제목 : <input type="text" name="title" maxlength="20"></p>
 		<textarea class="content" name="content" placeholder="내용 : "></textarea>
 		
-    	<input type="file" name="file1" />
+    	<p><input type="file" name="file1" /></p>
 		
 		<p><input type="submit" value="작성"/></p>
 	</form>

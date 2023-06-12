@@ -34,7 +34,7 @@ public class Controller extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	// 파일이 업로드될 디렉토리를 지정합니다.
-    private static final String UPLOAD_DIRECTORY = "C:\\Users\\wnfnw\\git\\tonysproject\\src\\main\\webapp\\img";
+    private static final String UPLOAD_DIRECTORY = "C:\\Users\\L4A\\Documents\\work1\\tonysproject\\src\\main\\webapp\\img";
 	
 	protected void doGet(HttpServletRequest request,  HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);

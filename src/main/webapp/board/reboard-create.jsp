@@ -24,7 +24,7 @@
 		<input type="hidden" name="b_depth" value="${board.b_depth}">	
 		
 		<p class="title"> 제목 : <input name="title" type="text" maxlength="20"></p>
-		<textarea class="content" name="content" placeholder="내용 : "></textarea>
+		<p><textarea class="content" name="content" placeholder="내용 : "></textarea></p>
 		
 		<p><input type="file" name="file1"/></p>
 		
